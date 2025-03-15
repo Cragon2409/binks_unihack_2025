@@ -14,6 +14,8 @@ import Dashboard from './pages/Dashboard/Dashboard';
 import Courses from './pages/Courses/Courses';
 import Timetable from './pages/Timetable/Timetable';
 
+import './App.css'
+
 const SUPABASE_URL = 'https://quaobmjerksaujqlspoz.supabase.co'
 const VITE_ANON_KEY = process.env.VITE_ANON_KEY ?? ""
 
