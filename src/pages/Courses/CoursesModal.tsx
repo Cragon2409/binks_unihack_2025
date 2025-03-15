@@ -23,7 +23,7 @@ export default function CoursesModal(
 
     return (
     <>
-      <Modal title="Basic Modal" 
+      <Modal title="Add a Course" 
             open={courseModalControl.open} 
             onOk={handleModalSubmit} 
             onCancel={handleModalSubmit}>
