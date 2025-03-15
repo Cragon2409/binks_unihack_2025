@@ -74,7 +74,6 @@ function App() {
   } else {
     return (
       <ThemeProvider>
-        <button onClick={() => supabase.auth.signOut() }>Sign Out</button>
         <Routes>
           <Route path="/" element={<AppLayout />}>
             <Route index element={<Dashboard />} />
