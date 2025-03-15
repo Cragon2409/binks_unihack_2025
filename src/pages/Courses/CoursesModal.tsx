@@ -8,11 +8,10 @@ type Color = Extract<GetProp<ColorPickerProps, 'value'>, string | { cleared: any
 interface CourseModalProps {
     courseModalControl: any
     setCourseModalControl: any
-    courses: any
   }
-  
+
 export default function CoursesModal(
-    { courseModalControl, setCourseModalControl, courses } : CourseModalProps
+    { courseModalControl, setCourseModalControl} : CourseModalProps
 ) {
     const [color, setColor] = useState<Color>('#1677ff');   // For the color picker value
     const [text, setText] = useState(''); 
@@ -23,13 +22,10 @@ export default function CoursesModal(
 
     return (
     <>
-      <Button type="primary" onClick={setCourseModalControl({ open: true })}>
-        Create Course
-      </Button>
       <Modal title="Basic Modal" 
             open={courseModalControl.open} 
             onOk={handleModalSubmit} 
-            onCancel={setCourseModalControl({ open: false })}>
+            onCancel={handleModalSubmit}>
         <Input
             placeholder="Enter course name"
             value={text}
