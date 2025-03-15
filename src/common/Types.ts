@@ -1,3 +1,10 @@
+
+import { SupabaseClient } from "@supabase/supabase-js"
+
+export interface LoginProps {
+  supabase: SupabaseClient
+}
+
 /**
  * These types were taken from https://github.com/codeuniversity/antd-weekly-calendar 
  * under a MIT licence
