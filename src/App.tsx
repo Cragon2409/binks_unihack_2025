@@ -20,12 +20,14 @@ import './App.css'
 function App() {
   const courses = useAppSelector(( state ) => state.courses.courses)
   const session = useAppSelector(( state ) => state.session.session)
+  const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
   // const [_errorLogMessage, setErrorLogMessage] = useState("")
-  const [courseTable, _setCourseTable] = useState(null)
+  // const [courseTable, _setCourseTable] = useState(null)
   console.log(courses)
 
   useEffect(() => { // log in effects
+    // setLoading(true);
     supabase.auth.getSession().then(({ data: { session } }) => {
       dispatch(setSession(session as React.SetStateAction<null>))
     })
@@ -39,8 +41,11 @@ function App() {
   }, [])
 
   useEffect(() => {
-    dispatch(fetchCourses((session as any)?.user.id));
-  }, []);
+    if (session != null) {
+      dispatch(fetchCourses((session as any)?.user.id));
+      setLoading(false);
+    }
+  }, [session]);
 
   // useEffect(() => { //retrieve relevant databases for user
   //   if (session != null) {

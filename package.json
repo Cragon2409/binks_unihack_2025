@@ -10,8 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@rose-pine/palette": "^4.0.1",
     "@reduxjs/toolkit": "^2.6.1",
+    "@rose-pine/palette": "^4.0.1",
     "@supabase/auth-ui-react": "^0.4.7",
     "@supabase/auth-ui-shared": "^0.1.8",
     "@supabase/supabase-js": "^2.49.1",
@@ -19,9 +19,10 @@
     "date-fns": "^4.1.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-router-dom": "^7.3.0",
     "react-redux": "^9.2.0",
-    "redux": "^5.0.1"
+    "react-router-dom": "^7.3.0",
+    "redux": "^5.0.1",
+    "redux-persist": "^6.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",
