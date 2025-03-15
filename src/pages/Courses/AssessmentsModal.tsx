@@ -1,8 +1,8 @@
 import type { DatePickerProps, MenuProps  } from 'antd';
 import { Button, Modal, Input, DatePicker, Dropdown, Space } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
-import { useAppDispatch, useAppSelector } from '../../API/hooks';
-import { createAssessment } from '../../API/assessmentsSlice';
+// import { useAppDispatch, useAppSelector } from '../../API/hooks';
+// import { createAssessment } from '../../API/assessmentsSlice';
 import { useState } from 'react';
 
 
@@ -15,11 +15,11 @@ interface AssessmentsModalProps {
 export default function AssessmentsModal(
     { assessmentCreationModalControl, setAssessmentCreationModalControl} : AssessmentsModalProps
 ) {
-    const session = useAppSelector(( state ) => state.session.session)
-    const dispatch = useAppDispatch();
-    const user_id = (session as any)?.user.id
+    // const session = useAppSelector(( state ) => state.session.session)
+    // const dispatch = useAppDispatch();
+    // const user_id = (session as any)?.user.id
     const [selectedOption, setSelectedOption] = useState<string>("Is the Assessment Complete?");
-    const [nameText, setNameText] = useState(''); 
+    // const [nameText, setNameText] = useState(''); 
     const [selectedDueDate, setSelectedDueDate] = useState<any>(null);
     const [selectedCompletedDate, setSelectedCompletedDate] = useState<any>(null);
 
@@ -77,7 +77,7 @@ export default function AssessmentsModal(
             
         <Input
             placeholder="Enter Assessment Name"
-            value={nameText}
+            // value={nameText}
         />
         <DatePicker
             placeholder="Select Due Date"
