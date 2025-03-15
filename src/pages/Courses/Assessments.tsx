@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector} from '../../API/hooks'
-import{ Card, Flex, Button, Modal  }from"antd";
-import { useState, useEffect } from 'react'
+import{ Card, Flex, Button  }from"antd";
+import { useEffect } from 'react'
 import { fetchAssessments } from '../../API/assessmentsSlice'
 
 
@@ -12,12 +12,11 @@ interface AssessmentModalProps {
 }
 
 export default function Assessments(
-  { course, assessmentModalControl, setAssessmentModalControl } : AssessmentModalProps
+  { course } : AssessmentModalProps
 ) {
   const assessments = useAppSelector(( state ) => state.assessments.assessments)
   const session = useAppSelector(( state ) => state.session.session)
   const dispatch = useAppDispatch();
-  const user_id = (session as any)?.user.id
   const relevantAssessments = assessments.filter(assessment => assessment.course_id == course.id)
 
 
