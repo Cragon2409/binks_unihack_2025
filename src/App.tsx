@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 
-import { createClient } from '@supabase/supabase-js'
 // import { Database } from './database.types'
 import { Auth } from '@supabase/auth-ui-react'
 import { ThemeSupa } from '@supabase/auth-ui-shared'
@@ -15,56 +14,59 @@ import Courses from './pages/Courses/Courses';
 import Timetable from './pages/Timetable/Timetable';
 
 import './App.css'
-
-const SUPABASE_URL = 'https://quaobmjerksaujqlspoz.supabase.co'
-const VITE_ANON_KEY = process.env.VITE_ANON_KEY ?? ""
-
-const supabase = createClient(SUPABASE_URL, VITE_ANON_KEY)
+import { supabase } from './supabase';
+import { useAppDispatch, useAppSelector } from './API/hooks'
+import { fetchCourses } from './API/coursesSlice'
+import { setSession } from './API/sessionSlice';
 
 function App() {
-  const [session, setSession] = useState(null)
-  const [_errorLogMessage, setErrorLogMessage] = useState("")
-  const [courseTable, setCourseTable] = useState(null)
-
-
+  const courses = useAppSelector(( state ) => state.courses.courses)
+  const session = useAppSelector(( state ) => state.session.session)
+  const dispatch = useAppDispatch();
+  // const [_errorLogMessage, setErrorLogMessage] = useState("")
+  const [courseTable, _setCourseTable] = useState(null)
+  console.log(courses)
 
   useEffect(() => { // log in effects
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session as React.SetStateAction<null>)
+      dispatch(setSession(session as React.SetStateAction<null>))
     })
-
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session as React.SetStateAction<null>)
+      dispatch(setSession(session as React.SetStateAction<null>))
     })
 
     return () => subscription.unsubscribe()
   }, [])
 
-  useEffect(() => { //retrieve relevant databases for user
-    if (session != null) {
-      const fetchCourseTable = async () => {
-        const {data, error} = await supabase 
-          .from('courses')
-          .select()
-          .in("user_id", [(session as any).user.id])
+  useEffect(() => {
+    dispatch(fetchCourses((session as any)?.user.id));
+  }, [session]);
 
-        if (error) {
-          setErrorLogMessage("Database failed to retrieve")
-        }
-        if (data) {
-          setCourseTable(data as any)
-        }
+  // useEffect(() => { //retrieve relevant databases for user
+  //   if (session != null) {
+  //     const fetchCourseTable = async () => {
+  //       const {data, error} = await supabase 
+  //         .from('courses')
+  //         .select()
+  //         .in("user_id", [(session as any).user.id])
 
-      }
-      fetchCourseTable()
-    }
-  }, [session])
+  //       if (error) {
+  //         setErrorLogMessage("Database failed to retrieve")
+  //       }
+  //       if (data) {
+  //         setCourseTable(data as any)
+  //       }
+
+  //     }
+  //     fetchCourseTable()
+  //   }
+  // }, [session])
 
   useEffect(() => { //log course table
-    console.log("Course Table:")
-    console.log(courseTable)
+    // console.log("Course Table:")
+    // console.log(courseTable)
   },[courseTable])
 
   if (!session) { //display log in page if not logged in
