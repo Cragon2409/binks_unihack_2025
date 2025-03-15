@@ -1,68 +1,82 @@
 import { useState, useEffect } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import { createClient } from '@supabase/supabase-js'
+
+
 // import { Database } from './database.types'
 import { Auth } from '@supabase/auth-ui-react'
 import { ThemeSupa } from '@supabase/auth-ui-shared'
 
-const SUPABASE_URL = 'https://quaobmjerksaujqlspoz.supabase.co'
-const VITE_ANON_KEY = process.env.VITE_ANON_KEY ?? ""
+import { Routes, Route } from 'react-router-dom';
 
-const supabase = createClient(SUPABASE_URL, VITE_ANON_KEY)
+import './App.css'
+import AppLayout from './components/Layout/AppLayout'
+import ThemeProvider from './components/ThemeProvider/ThemeProvider'
+import Dashboard from './pages/Dashboard/Dashboard';
+import Courses from './pages/Courses/Courses';
+import Timetable from './pages/Timetable/Timetable';
 
+import './App.css'
+import { supabase } from './supabase';
+import { useAppDispatch, useAppSelector } from './API/hooks'
+import { fetchCourses } from './API/coursesSlice'
+import { setSession } from './API/sessionSlice';
 
 function App() {
-  const [count, setCount] = useState(0)
-  const [session, setSession] = useState(null)
+  const courses = useAppSelector(( state ) => state.courses.courses)
+  const session = useAppSelector(( state ) => state.session.session)
+  const [loading, setLoading] = useState(false);
+  const dispatch = useAppDispatch();
+  // const [_errorLogMessage, setErrorLogMessage] = useState("")
+  // const [courseTable, _setCourseTable] = useState(null)
+  console.log(courses)
 
-  useEffect(() => {
+  useEffect(() => { // log in effects
+    // setLoading(true);
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session as React.SetStateAction<null>)
+      dispatch(setSession(session as React.SetStateAction<null>))
     })
-
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session as React.SetStateAction<null>)
+      dispatch(setSession(session as React.SetStateAction<null>))
+
     })
 
     return () => subscription.unsubscribe()
   }, [])
 
-  if (!session) {
-    return (<Auth supabaseClient={supabase} appearance={{ theme: ThemeSupa }} />)
+
+  useEffect(() => {
+    if (session != null) {
+      dispatch(fetchCourses((session as any)?.user.id));
+      setLoading(false);
+    }
+  }, [session]);
+
+  if (loading) {
+    return (
+      <ThemeProvider>
+        <main className="loading-screen-main">
+            loading...
+        </main>
+      </ThemeProvider>
+    )
+  } else if (!session) { //display log in page if not logged in
+    return (
+      <Auth supabaseClient={supabase} appearance={{ theme: ThemeSupa }} providers={['discord','github']} />)
   } else {
     return (
-      <>
-        <div>
-          <a href="https://vitejs.dev" target="_blank">
-            <img src={viteLogo} className="logo" alt="Vite logo" />
-          </a>
-          <a href="https://react.dev" target="_blank">
-            <img src={reactLogo} className="logo react" alt="React logo" />
-          </a>
-        </div>
-        <h1>Vite + React</h1>
-        <div className="card">
-          <button onClick={() => setCount((count) => count + 1)}>
-            count is {count}
-          </button>
-          <p>
-            Logged in.
-            <br></br>
-            Edit <code>src/App.tsx</code> and save to test HMR
-          </p>
-        </div>
-        <p className="read-the-docs">
-          Click on the Vite and React logos to learn more
-        </p>
-      </>
-    )
+      <ThemeProvider>
+        <Routes>
+          <Route path="/" element={<AppLayout />}>
+            <Route index element={<Dashboard />} />
+            <Route path="courses" element={<Courses />} />
+            <Route path="timetable" element={<Timetable />} />
+          </Route>
+        </Routes>
+      </ThemeProvider>
+    );  
   }
 
-  
 }
 
-export default App
+export default App;
