@@ -22,14 +22,14 @@ import { setSession } from './API/sessionSlice';
 function App() {
   const courses = useAppSelector(( state ) => state.courses.courses)
   const session = useAppSelector(( state ) => state.session.session)
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
   // const [_errorLogMessage, setErrorLogMessage] = useState("")
   // const [courseTable, _setCourseTable] = useState(null)
   console.log(courses)
 
   useEffect(() => { // log in effects
-    setLoading(true);
+    // setLoading(true);
     supabase.auth.getSession().then(({ data: { session } }) => {
       dispatch(setSession(session as React.SetStateAction<null>))
     })
@@ -47,7 +47,7 @@ function App() {
       dispatch(fetchCourses((session as any)?.user.id));
       setLoading(false);
     }
-  }, []);
+  }, [session]);
 
   if (loading) {
     return (
