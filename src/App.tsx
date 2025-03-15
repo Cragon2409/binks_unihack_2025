@@ -47,7 +47,7 @@ function App() {
       dispatch(fetchCourses((session as any)?.user.id));
       setLoading(false);
     }
-  }, [session]);
+  }, []);
 
   if (loading) {
     return (
