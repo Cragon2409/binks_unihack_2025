@@ -49,6 +49,7 @@ export default function Courses() {
         <Flex wrap gap="small">
         {courses.map((course, index) => (
             <Button 
+              className="course-button"
               style={{ 
                 border: `2px solid ${course.colour_code}`
               }}
