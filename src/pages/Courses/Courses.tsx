@@ -15,12 +15,14 @@ export default function Courses() {
   const [courses, setCourses] = useState<string[]>([]);
   const [isCourseInfoModalOpen, setIsCourseInfoModalOpen] = useState(false);
   const [isCourseAddModalOpen, setIsCourseAddModalOpen] = useState(false);
+  const [selectedCourse, setSelectedCourse] = useState<string | null>(null);
 
   const addCourse = () => {
     showCourseAddModal()
   };
 
-  const showCourseInfoModal = () => {
+  const showCourseInfoModal = (course: string) => {
+    setSelectedCourse(course);
     setIsCourseInfoModalOpen(true);
   };
 
@@ -54,9 +56,9 @@ export default function Courses() {
       <div className="course-container">
         <Flex wrap gap="small">
           {courses.map((course, index) => (
-            <Button style={courseInfoButtonStyle} onClick={showCourseInfoModal} key={index}> {course} </Button>
+            <Button style={courseInfoButtonStyle} onClick={() => showCourseInfoModal(course)} key={index}> {course} </Button>
           ))}
-            <Button style={courseInfoButtonStyle} onClick={showCourseInfoModal}> Woah a Course </Button>
+            <Button style={courseInfoButtonStyle} onClick={() => showCourseInfoModal("Placeholder")}> Woah a Course </Button>
         </Flex>
 
         <Modal 
@@ -64,12 +66,11 @@ export default function Courses() {
           open={isCourseAddModalOpen} 
           onOk={handleCourseAddOk} 
           onCancel={handleCourseAddCancel}
-          // width={"100%"}
           >
           <p>Assessments</p>
         </Modal>
         <Modal 
-          title="Basic Modal" 
+          title={selectedCourse || "Course Information"} 
           open={isCourseInfoModalOpen} 
           onOk={handleCourseInfoOk} 
           onCancel={handleCourseInfoCancel}
