@@ -5,6 +5,8 @@ import { useAppDispatch, useAppSelector } from '../../API/hooks'
 import { fetchCourses } from '../../API/coursesSlice'
 import { useEffect, useState } from 'react'
 import CoursesModal from './CoursesModal';
+import Assessment from './Assessments';
+
 
 
 const { Title } = Typography;
@@ -15,18 +17,20 @@ export default function Courses() {
   const session = useAppSelector(( state ) => state.session.session)
   const dispatch = useAppDispatch();
   const [courseModalControl, setCourseModalControl] = useState({open : false})
+  const [assessmentModalControl, setAssessmentModalControl] = useState({open : false})
+
 
   useEffect(() => {
     dispatch(fetchCourses((session as any)?.user.id));
   }, [session]);
 
-  console.log("SESSION", session)
-  console.log("COURSES", courses)
+  // console.log("SESSION", session)
+  // console.log("COURSES", courses)
 
   const [isCourseInfoModalOpen, setIsCourseInfoModalOpen] = useState(false);
-  const [selectedCourse, setSelectedCourse] = useState<string | null>(null);
+  const [selectedCourse, setSelectedCourse] = useState<any>(null);
 
-  const showCourseInfoModal = (course: string) => {
+  const showCourseInfoModal = ( course: any ) => {
     setSelectedCourse(course);
     setIsCourseInfoModalOpen(true);
   };
@@ -53,7 +57,7 @@ export default function Courses() {
               style={{ 
                 border: `2px solid ${course.colour_code}`
               }}
-              onClick={() => showCourseInfoModal("Placeholder")} 
+              onClick={() => showCourseInfoModal(course)} 
               key={index}
             > 
               {course.name} 
@@ -66,18 +70,21 @@ export default function Courses() {
           setCourseModalControl={setCourseModalControl}
           />
         <Modal 
-          title={selectedCourse || "Course Information"} 
+          title={selectedCourse ? selectedCourse.name : "Course Information"}
           open={isCourseInfoModalOpen} 
           onOk={handleCourseInfoOk} 
           onCancel={handleCourseInfoCancel}
           width={"100%"}
           wrapClassName="course-info-modal"
         >
-          <p>Assessments</p>
-          <p>No assessments available for this course.</p>
-          <p>Grades</p> 
+          <Assessment 
+            course={selectedCourse}
+            assessmentModalControl={assessmentModalControl}
+            setAssessmentModalControl={setAssessmentModalControl}
+          />
         </Modal>
       </div>
     </>
   )
 }
+
