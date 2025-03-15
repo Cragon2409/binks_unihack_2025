@@ -5,9 +5,7 @@ import { useAppDispatch, useAppSelector } from '../../API/hooks';
 import { createAssessment } from '../../API/assessmentsSlice';
 import { useState } from 'react';
 
-const onOk = (value: DatePickerProps['value'] ) => {
-    console.log('onOk: ', value);
-};
+
 
 interface AssessmentsModalProps {
     assessmentCreationModalControl: any
@@ -21,23 +19,30 @@ export default function AssessmentsModal(
     const dispatch = useAppDispatch();
     const user_id = (session as any)?.user.id
     const [selectedOption, setSelectedOption] = useState<string>("Is the Assessment Complete?");
-    const [text, setText] = useState(''); 
-    const [selecteDuedDate, setSelectedDueDate] = useState<any>(null);
-    const [selecteCompletedDate, setSelectedCompletedDate] = useState<any>(null);
+    const [nameText, setNameText] = useState(''); 
+    const [selectedDueDate, setSelectedDueDate] = useState<any>(null);
+    const [selectedCompletedDate, setSelectedCompletedDate] = useState<any>(null);
 
 
     const handleMenuClick: MenuProps["onClick"] = (e) => {
         setSelectedOption(e.key || "Is the Assessment Complete?");
       };
 
+    const clearFields = () => {
+        setSelectedDueDate(null)
+        setSelectedCompletedDate(null)
+    }
+
     const handleModalSubmit = () => {
-        const assessment = {user_id : user_id, name : text}
-        dispatch(createAssessment(assessment))
+        // const assessment = {user_id : user_id, name : text}
+        // dispatch(createAssessment(assessment))
         setAssessmentCreationModalControl({ open: false });
+        clearFields();
     }
 
     const handleModalCancel = () => {
         setAssessmentCreationModalControl({ open: false });
+        clearFields();
     }
 
     const items: MenuProps["items"] = [
@@ -49,7 +54,17 @@ export default function AssessmentsModal(
           key: "Not Completed",
           label: "Not Completed",
         },
-      ];
+    ];
+    
+    const onOkDue = (value: DatePickerProps['value'] ) => {
+        console.log('onOk: ', value);
+        setSelectedDueDate(value)
+    };
+
+    const onOkComplete = (value: DatePickerProps['value'] ) => {
+        console.log('onOk: ', value);
+        setSelectedCompletedDate(value)
+    };
 
     return (
     <>
@@ -62,39 +77,39 @@ export default function AssessmentsModal(
             
         <Input
             placeholder="Enter Assessment Name"
-            value={text}
+            value={nameText}
         />
         <DatePicker
             placeholder="Select Due Date"
             showTime
+            value={selectedDueDate}
             onChange={(value, dateString) => {
                 console.log('Selected Time: ', value);
                 console.log('Formatted Selected Time: ', dateString);
             }}
-            onOk={onOk}
-            onOpenChange={(isOpen) => !isOpen && setSelectedDueDate(null)}
+            onOk={onOkDue}
         />
         <DatePicker
             placeholder="Select Completed Date"
             showTime
+            value={selectedCompletedDate}
             onChange={(value, dateString) => {
                 console.log('Selected Time: ', value);
                 console.log('Formatted Selected Time: ', dateString);
             }}
-            onOk={onOk}
-            onOpenChange={() => setSelectedCompletedDate(null)}
+            onOk={onOkComplete}
         />
         <Input
             placeholder="Enter Weight of Assessment"
-            value={text}
+            // value={text}
         />
         <Input
             placeholder="Enter Target Marks"
-            value={text}
+            // value={text}
         />
         <Input
             placeholder="Enter Current Marks"
-            value={text}
+            // value={text}
         />
         <Dropdown menu={{ items, onClick: handleMenuClick }}>
             <a onClick={(e) => e.preventDefault()}>
