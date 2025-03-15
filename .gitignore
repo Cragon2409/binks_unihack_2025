@@ -25,6 +25,3 @@ dist-ssr
 
 #package stuff
 package-lock.json
-
-#secrets
-.env
