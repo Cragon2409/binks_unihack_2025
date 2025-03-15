@@ -68,10 +68,11 @@ function App() {
   },[courseTable])
 
   if (!session) { //display log in page if not logged in
-    return (<Auth supabaseClient={supabase} appearance={{ theme: ThemeSupa }} />)
+    return (<Auth supabaseClient={supabase} appearance={{ theme: ThemeSupa }} providers={['discord','github']} />)
   } else {
     return (
       <ThemeProvider>
+        <button onClick={() => supabase.auth.signOut() }>Sign Out</button>
         <Routes>
           <Route path="/" element={<AppLayout />}>
             <Route index element={<Dashboard />} />
