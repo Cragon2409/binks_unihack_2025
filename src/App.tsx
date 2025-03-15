@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 
+
 // import { Database } from './database.types'
 import { Auth } from '@supabase/auth-ui-react'
 import { ThemeSupa } from '@supabase/auth-ui-shared'
@@ -37,10 +38,12 @@ function App() {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       dispatch(setSession(session as React.SetStateAction<null>))
+
     })
 
     return () => subscription.unsubscribe()
   }, [])
+
 
   useEffect(() => {
     if (session != null) {
@@ -73,6 +76,7 @@ function App() {
       </ThemeProvider>
     );  
   }
+
 }
 
 export default App;
