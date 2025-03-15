@@ -5,25 +5,32 @@ import { useAppDispatch, useAppSelector } from '../../API/hooks'
 import { fetchCourses } from '../../API/coursesSlice'
 import { useEffect, useState } from 'react'
 import CoursesModal from './CoursesModal';
+import Assessment from './Assessments';
+
 
 
 const { Title } = Typography;
 
 
 export default function Courses() {
-  //const courses = useAppSelector(( state ) => state.courses.courses)
+  const courses = useAppSelector(( state ) => state.courses.courses)
   const session = useAppSelector(( state ) => state.session.session)
   const dispatch = useAppDispatch();
   const [courseModalControl, setCourseModalControl] = useState({open : false})
+  const [assessmentModalControl, setAssessmentModalControl] = useState({open : false})
+
 
   useEffect(() => {
     dispatch(fetchCourses((session as any)?.user.id));
   }, [session]);
 
-  const [isCourseInfoModalOpen, setIsCourseInfoModalOpen] = useState(false);
-  const [selectedCourse, setSelectedCourse] = useState<string | null>(null);
+  // console.log("SESSION", session)
+  // console.log("COURSES", courses)
 
-  const showCourseInfoModal = (course: string) => {
+  const [isCourseInfoModalOpen, setIsCourseInfoModalOpen] = useState(false);
+  const [selectedCourse, setSelectedCourse] = useState<any>(null);
+
+  const showCourseInfoModal = ( course: any ) => {
     setSelectedCourse(course);
     setIsCourseInfoModalOpen(true);
   };
@@ -36,7 +43,6 @@ export default function Courses() {
     setIsCourseInfoModalOpen(false);
   };
 
-
   return (
     <>
       <Flex gap="small" align="center">
@@ -45,7 +51,18 @@ export default function Courses() {
       </Flex>
       <div className="course-container">
         <Flex wrap gap="small">
-            <Button  onClick={() => showCourseInfoModal("Placeholder")}> Woah a Course </Button>
+        {courses.map((course, index) => (
+            <Button 
+              className="course-button"
+              style={{ 
+                border: `2px solid ${course.colour_code}`
+              }}
+              onClick={() => showCourseInfoModal(course)} 
+              key={index}
+            > 
+              {course.name} 
+            </Button>
+          ))}
         </Flex>
 
         <CoursesModal
@@ -53,18 +70,21 @@ export default function Courses() {
           setCourseModalControl={setCourseModalControl}
           />
         <Modal 
-          title={selectedCourse || "Course Information"} 
+          title={selectedCourse ? selectedCourse.name : "Course Information"}
           open={isCourseInfoModalOpen} 
           onOk={handleCourseInfoOk} 
           onCancel={handleCourseInfoCancel}
           width={"100%"}
           wrapClassName="course-info-modal"
-          >
-            <p>Assessments</p>
-            <p>No assessments available for this course.</p>
-            <p>Grades</p> 
+        >
+          <Assessment 
+            course={selectedCourse}
+            assessmentModalControl={assessmentModalControl}
+            setAssessmentModalControl={setAssessmentModalControl}
+          />
         </Modal>
       </div>
     </>
   )
 }
+
