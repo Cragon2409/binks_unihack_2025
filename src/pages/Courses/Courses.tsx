@@ -11,7 +11,7 @@ const { Title } = Typography;
 
 
 export default function Courses() {
-  //const courses = useAppSelector(( state ) => state.courses.courses)
+  const courses = useAppSelector(( state ) => state.courses.courses)
   const session = useAppSelector(( state ) => state.session.session)
   const dispatch = useAppDispatch();
   const [courseModalControl, setCourseModalControl] = useState({open : false})
@@ -19,6 +19,9 @@ export default function Courses() {
   useEffect(() => {
     dispatch(fetchCourses((session as any)?.user.id));
   }, [session]);
+
+  console.log("SESSION", session)
+  console.log("COURSES", courses)
 
   const [isCourseInfoModalOpen, setIsCourseInfoModalOpen] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState<string | null>(null);
@@ -36,7 +39,6 @@ export default function Courses() {
     setIsCourseInfoModalOpen(false);
   };
 
-
   return (
     <>
       <Flex gap="small" align="center">
@@ -45,7 +47,17 @@ export default function Courses() {
       </Flex>
       <div className="course-container">
         <Flex wrap gap="small">
-            <Button  onClick={() => showCourseInfoModal("Placeholder")}> Woah a Course </Button>
+        {courses.map((course, index) => (
+            <Button 
+              style={{ 
+                border: `2px solid ${course.colour_code}`
+              }}
+              onClick={() => showCourseInfoModal("Placeholder")} 
+              key={index}
+            > 
+              {course.name} 
+            </Button>
+          ))}
         </Flex>
 
         <CoursesModal
@@ -59,10 +71,10 @@ export default function Courses() {
           onCancel={handleCourseInfoCancel}
           width={"100%"}
           wrapClassName="course-info-modal"
-          >
-            <p>Assessments</p>
-            <p>No assessments available for this course.</p>
-            <p>Grades</p> 
+        >
+          <p>Assessments</p>
+          <p>No assessments available for this course.</p>
+          <p>Grades</p> 
         </Modal>
       </div>
     </>
