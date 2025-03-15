@@ -40,7 +40,8 @@ function App() {
 
   if (!session) {
     return (<Auth supabaseClient={supabase} appearance={{ theme: ThemeSupa }} />)
-  } else {
+  } 
+  else {
     return (
       <ThemeProvider>
         <Routes>
@@ -49,7 +50,7 @@ function App() {
             <Route path="courses" element={<Courses />} />
             <Route path="timetable" element={<Timetable />} />
           </Route>
-      </Routes>
+        </Routes>
       </ThemeProvider>
     );  
   }
