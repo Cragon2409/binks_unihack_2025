@@ -17,6 +17,7 @@ export default function CoursesModal(
     const [text, setText] = useState(''); 
 
     const handleModalSubmit = () => {
+        //jazz TODO
         setCourseModalControl({ open: false });
     }
 
