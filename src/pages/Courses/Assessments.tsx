@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector} from '../../API/hooks'
-import{ Card, Flex, Button  }from"antd";
+import{ Card, Flex, Button, Modal  }from"antd";
 import { useState, useEffect } from 'react'
 import { fetchAssessments } from '../../API/assessmentsSlice'
 
@@ -48,9 +48,7 @@ export default function Assessments(
             </div>
           </Card>
         ))}
-
       </Flex>
-
     </>
   );
     
