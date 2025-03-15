@@ -12,7 +12,7 @@ interface AssessmentModalProps {
 }
 
 export default function Assessments(
-  { course, assessmentModalControl, setAssessmentModalControl } : AssessmentModalProps
+  { course } : AssessmentModalProps
 ) {
   const assessments = useAppSelector(( state ) => state.assessments.assessments)
   const session = useAppSelector(( state ) => state.session.session)
