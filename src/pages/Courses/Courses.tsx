@@ -1,13 +1,15 @@
 import { useState } from "react";
 import { Typography, Button, Flex, Modal } from 'antd';
-
+import "./Courses.css"
 
 const { Title } = Typography;
 
-const courseButtonStyle: React.CSSProperties = {
+const courseInfoButtonStyle: React.CSSProperties = {
   display: "flex",
   alignItems: "center",
 };
+
+
 
 export default function Courses() {
   const [courses, setCourses] = useState<string[]>([]);
@@ -52,15 +54,28 @@ export default function Courses() {
       <div className="course-container">
         <Flex wrap gap="small">
           {courses.map((course, index) => (
-            <Button style={courseButtonStyle} onClick={showCourseInfoModal} key={index}> {course} </Button>
+            <Button style={courseInfoButtonStyle} onClick={showCourseInfoModal} key={index}> {course} </Button>
           ))}
-            <Button style={courseButtonStyle} onClick={showCourseInfoModal}> Woah a Course </Button>
+            <Button style={courseInfoButtonStyle} onClick={showCourseInfoModal}> Woah a Course </Button>
         </Flex>
 
-        <Modal title="Add Course Modal" open={isCourseAddModalOpen} onOk={handleCourseAddOk} onCancel={handleCourseAddCancel}>
+        <Modal 
+          title="Add Course Modal" 
+          open={isCourseAddModalOpen} 
+          onOk={handleCourseAddOk} 
+          onCancel={handleCourseAddCancel}
+          // width={"100%"}
+          >
           <p>Assessments</p>
         </Modal>
-        <Modal title="Basic Modal" open={isCourseInfoModalOpen} onOk={handleCourseInfoOk} onCancel={handleCourseInfoCancel}>
+        <Modal 
+          title="Basic Modal" 
+          open={isCourseInfoModalOpen} 
+          onOk={handleCourseInfoOk} 
+          onCancel={handleCourseInfoCancel}
+          width={"100%"}
+          wrapClassName="course-info-modal"
+          >
           <p>Assessments</p>
           <p>Grades</p>
         </Modal>
