@@ -42,7 +42,7 @@ function App() {
 
   useEffect(() => {
     dispatch(fetchCourses((session as any)?.user.id));
-  }, [session]);
+  }, []);
 
   // useEffect(() => { //retrieve relevant databases for user
   //   if (session != null) {
