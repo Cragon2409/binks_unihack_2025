@@ -25,6 +25,14 @@ const items: MenuItem[] = [
         Timetable
       </Link>
     )
+  },
+  {
+  key: 3, 
+  label: (
+    <Link href="/" rel="noopener noreferrer">
+      Dashboard
+    </Link>
+  )
   }
 ];
 
@@ -45,6 +53,7 @@ export default function HeaderContent() {
         Unitrack.
       </Link>
       <Menu
+        style={{width : "25%"}}
         mode="horizontal"
         items={items}
       />
