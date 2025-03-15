@@ -1,7 +1,7 @@
-import { Typography, Button, Modal, Input, ColorPicker } from 'antd';
-import { useAppDispatch, useAppSelector } from '../../API/hooks'
-import { fetchCourses } from '../../API/coursesSlice'
-import { useEffect, useState } from 'react'
+import { Modal, Input, ColorPicker } from 'antd';
+//import { useAppDispatch, useAppSelector } from '../../API/hooks'
+//import { fetchCourses } from '../../API/coursesSlice'
+import { useState } from 'react'
 import type { ColorPickerProps, GetProp } from 'antd';
 type Color = Extract<GetProp<ColorPickerProps, 'value'>, string | { cleared: any }>;
 

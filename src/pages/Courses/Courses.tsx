@@ -11,7 +11,7 @@ const { Title } = Typography;
 
 
 export default function Courses() {
-  const courses = useAppSelector(( state ) => state.courses.courses)
+  //const courses = useAppSelector(( state ) => state.courses.courses)
   const session = useAppSelector(( state ) => state.session.session)
   const dispatch = useAppDispatch();
   const [courseModalControl, setCourseModalControl] = useState({open : false})
