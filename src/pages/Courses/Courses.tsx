@@ -15,7 +15,7 @@ export default function Courses() {
   const [isCourseAddModalOpen, setIsCourseAddModalOpen] = useState(false);
 
   const addCourse = () => {
-    setCourses([...courses, "Course Name"]);
+    showCourseAddModal()
   };
 
   const showCourseInfoModal = () => {
@@ -36,6 +36,7 @@ export default function Courses() {
 
   const handleCourseAddOk = () => {
     setIsCourseAddModalOpen(false);
+    setCourses([...courses, "Course Name"]);
   };
 
   const handleCourseAddCancel = () => {
@@ -51,7 +52,7 @@ export default function Courses() {
       <div className="course-container">
         <Flex wrap gap="small">
           {courses.map((course, index) => (
-            <Button style={courseButtonStyle} onClick={showCourseAddModal} key={index}> {course} </Button>
+            <Button style={courseButtonStyle} onClick={showCourseInfoModal} key={index}> {course} </Button>
           ))}
             <Button style={courseButtonStyle} onClick={showCourseInfoModal}> Woah a Course </Button>
         </Flex>
