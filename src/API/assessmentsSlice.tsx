@@ -34,7 +34,7 @@ const createAssessments = async (assessment: any): Promise<any> => {
     if (error) {
         throw new Error(error.message);
     }
-    return data;
+    return data && data[0] ? data[0] : null;
 };
 
 const updateAssessments = async (id: number, assessment: any): Promise<any> => {
@@ -46,7 +46,7 @@ const updateAssessments = async (id: number, assessment: any): Promise<any> => {
     if (error) {
         throw new Error(error.message);
     }
-    return data;
+    return data && data[0] ? data[0] : null;
 };
   
 const deleteAssessments = async (id: number): Promise<any> => {
@@ -57,7 +57,7 @@ const deleteAssessments = async (id: number): Promise<any> => {
     if (error) {
         throw new Error(error.message);
     }
-    return data;
+    return data && data[0] ? data[0] : null;
 };
 
 export const fetchAssessments = createAsyncThunk(
