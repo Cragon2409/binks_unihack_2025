@@ -30,7 +30,8 @@ const getCourses = async (id: any): Promise<any> => {
 const createCourses = async (course: any): Promise<any> => {
   const { data, error } = await supabase
     .from('courses')
-    .insert([course]);
+    .insert(course)
+    .select();
   if (error) {
     throw new Error(error.message);
   }
