@@ -10,7 +10,9 @@ import * as Constants from '../../common/Constants';
 
 import { useAppSelector } from '../../API/hooks';
 
+
 import { supabase } from '../../API/supabase';
+
 
 const { Text } = Typography;
 
@@ -50,7 +52,9 @@ export default function FooterContent() {
           Unitrack © {new Date().getFullYear()}
         </Text>
         <Text>
+
           {session ? `Logged in as ${(session as any).user.email}` : ""}
+
         </Text>
         <button onClick={() => supabase.auth.signOut()} style={{borderRadius : "4px", backgroundColor : "#3232A5", padding: "5px", color : "white"}}>Sign Out</button>
       </Flex>
