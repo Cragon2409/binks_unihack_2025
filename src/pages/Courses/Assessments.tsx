@@ -1,7 +1,8 @@
 import { useAppDispatch, useAppSelector} from '../../API/hooks'
 import{ Card, Flex, Button  }from"antd";
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { fetchAssessments } from '../../API/assessmentsSlice'
+import AssessmentsModals from './AssessmentsModal';
 
 
 
@@ -18,6 +19,7 @@ export default function Assessments(
   const session = useAppSelector(( state ) => state.session.session)
   const dispatch = useAppDispatch();
   const relevantAssessments = assessments.filter(assessment => assessment.course_id == course.id)
+  const [assessmentCreationModalControl, setAssessmentCreationModalControl] = useState({open : false})
 
 
   useEffect(() => {
@@ -42,6 +44,13 @@ export default function Assessments(
             </div>
           </Card>
         ))}
+        <Button onClick={() => setAssessmentCreationModalControl({open: true})}>
+          Add Assessment
+        </Button>
+        <AssessmentsModals 
+          assessmentCreationModalControl={assessmentCreationModalControl}
+          setAssessmentCreationModalControl={setAssessmentCreationModalControl}
+        />
       </Flex>
     </>
   );
