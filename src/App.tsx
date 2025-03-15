@@ -14,6 +14,8 @@ import Dashboard from './pages/Dashboard/Dashboard';
 import Courses from './pages/Courses/Courses';
 import Timetable from './pages/Timetable/Timetable';
 
+import './App.css'
+
 const SUPABASE_URL = 'https://quaobmjerksaujqlspoz.supabase.co'
 const VITE_ANON_KEY = process.env.VITE_ANON_KEY ?? ""
 
@@ -21,8 +23,12 @@ const supabase = createClient(SUPABASE_URL, VITE_ANON_KEY)
 
 function App() {
   const [session, setSession] = useState(null)
+  const [_errorLogMessage, setErrorLogMessage] = useState("")
+  const [courseTable, setCourseTable] = useState(null)
 
-  useEffect(() => {
+
+
+  useEffect(() => { // log in effects
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session as React.SetStateAction<null>)
     })
@@ -36,7 +42,32 @@ function App() {
     return () => subscription.unsubscribe()
   }, [])
 
-  if (!session) {
+  useEffect(() => { //retrieve relevant databases for user
+    if (session != null) {
+      const fetchCourseTable = async () => {
+        const {data, error} = await supabase 
+          .from('courses')
+          .select()
+          .in("user_id", [(session as any).user.id])
+
+        if (error) {
+          setErrorLogMessage("Database failed to retrieve")
+        }
+        if (data) {
+          setCourseTable(data as any)
+        }
+
+      }
+      fetchCourseTable()
+    }
+  }, [session])
+
+  useEffect(() => { //log course table
+    console.log("Course Table:")
+    console.log(courseTable)
+  },[courseTable])
+
+  if (!session) { //display log in page if not logged in
     return (<Auth supabaseClient={supabase} appearance={{ theme: ThemeSupa }} />)
   } else {
     return (
