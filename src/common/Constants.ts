@@ -66,9 +66,6 @@ export const lightTheme: ThemeConfig = {
         headerBg: dawnBase,
         footerBg: dawnSurface
       },
-      Card: {
-        bodyPadding: 0,
-      },
       Table: {
         footerBg: dawnSurface
       }
@@ -103,9 +100,6 @@ export const darkTheme: ThemeConfig = {
         Layout: {
           headerBg: mainBase,
           footerBg: mainSurface
-        },
-        Card: {
-          bodyPadding: 0,
         },
         Table: {
           footerBg: mainSurface
