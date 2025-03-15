@@ -16,8 +16,11 @@ const initialState: CoursesState = {
   error: null
 };
 
-const getCourses = async (): Promise<any> => {
-  const {data, error} = await supabase.from('courses').select();
+const getCourses = async (id: any): Promise<any> => {
+  const {data, error} = await supabase
+    .from('courses')
+    .select()
+    .eq('user_id', id);
   if (error) {
     throw new Error(error.message);
   }
@@ -25,7 +28,9 @@ const getCourses = async (): Promise<any> => {
 };
 
 const createCourses = async (course: any): Promise<any> => {
-  const { data, error } = await supabase.from('courses').insert([course]);
+  const { data, error } = await supabase
+    .from('courses')
+    .insert([course]);
   if (error) {
     throw new Error(error.message);
   }
@@ -45,8 +50,8 @@ const deleteCourses = async (id: number): Promise<any> => {
 
 export const fetchCourses = createAsyncThunk(
   'courses/fetchCourses',
-  async () => {
-    const courses = await getCourses();
+  async (id: any) => {
+    const courses = await getCourses(id);
     return courses;
   }
 );

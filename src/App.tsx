@@ -25,8 +25,6 @@ function App() {
   const [_errorLogMessage, setErrorLogMessage] = useState("")
   const [courseTable, setCourseTable] = useState(null)
 
-
-
   useEffect(() => { // log in effects
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session as React.SetStateAction<null>)
@@ -42,7 +40,7 @@ function App() {
   }, [])
 
   useEffect(() => {
-    dispatch(fetchCourses());
+    dispatch(fetchCourses((session as any).user.id));
   }, []);
 
   useEffect(() => { //retrieve relevant databases for user
