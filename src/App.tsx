@@ -53,9 +53,7 @@ function App() {
     return (
       <ThemeProvider>
         <main className="loading-screen-main">
-          <div className="loading-screen" style={{height: "100%", width:"100%", color:"black"}}>
             loading...
-          </div>
         </main>
       </ThemeProvider>
     )
