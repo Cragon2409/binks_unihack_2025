@@ -34,10 +34,12 @@ function App() {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       dispatch(setSession(session as React.SetStateAction<null>))
+
     })
 
     return () => subscription.unsubscribe()
   }, [])
+
 
   useEffect(() => {
     if (session != null) {
