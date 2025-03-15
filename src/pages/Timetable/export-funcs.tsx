@@ -79,7 +79,7 @@ function convertAssessmentToEvent(assessment : any, courses : any) {
 export function downloadICS(assessments : any, courses : any) {
     const events = assessments.map((assessment : any) => convertAssessmentToEvent(assessment, courses))
 
-    createEvents(events, (error, value) => {
+    createEvents(events, (error : any, value : any) => {
         if (error) {
             console.error("Error generating ICS file:", error);
             return;
