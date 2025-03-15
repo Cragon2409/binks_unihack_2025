@@ -50,7 +50,7 @@ export default function FooterContent() {
           Unitrack © {new Date().getFullYear()}
         </Text>
         <Text>
-          Logged in as {(session as any).user.email}
+          {session ? `Logged in as {(session as any).user.email` : ""}
         </Text>
         <button onClick={() => supabase.auth.signOut()} style={{borderRadius : "4px", backgroundColor : "#3232A5", padding: "5px", color : "white"}}>Sign Out</button>
       </Flex>
