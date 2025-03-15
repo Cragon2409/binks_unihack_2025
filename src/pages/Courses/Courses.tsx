@@ -14,6 +14,9 @@ export default function Courses() {
   const addCourse = () => {
     setCourses([...courses, "Course Name"]);
   };
+  const openCourse = () => {
+    
+  }
 
   return (
     <>
@@ -26,7 +29,7 @@ export default function Courses() {
           {courses.map((course, index) => (
             <Button style={courseButtonStyle} key={index}> {course} </Button>
           ))}
-            <Button style={courseButtonStyle} > Woah a Course </Button>
+            <Button style={courseButtonStyle} onClick={openCourse}> Woah a Course </Button>
         </Flex>
       </div>
     </>
