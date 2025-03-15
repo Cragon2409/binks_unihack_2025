@@ -8,7 +8,7 @@ import { Auth } from '@supabase/auth-ui-react'
 import { ThemeSupa } from '@supabase/auth-ui-shared'
 
 const SUPABASE_URL = 'https://quaobmjerksaujqlspoz.supabase.co'
-const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF1YW9ibWplcmtzYXVqcWxzcG96Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDE5OTcxNjYsImV4cCI6MjA1NzU3MzE2Nn0._8mMNm-VNhhMNdkQVsu906Pgs7UWq1_c5X0NqLsPYYA'
+const ANON_KEY = process.env.ANON_KEY ?? ""
 
 const supabase = createClient(SUPABASE_URL, ANON_KEY)
 
