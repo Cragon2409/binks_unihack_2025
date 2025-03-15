@@ -6,3 +6,39 @@ body {
   background-color: #191724;
 }
 
+/* Styles for Dashboard */
+
+.dashboard-page .new-page {
+  font-family: Arial, sans-serif;
+  text-align: center;
+}
+
+.dashboard-page h1 {
+  margin-bottom: 20px;
+}
+
+.dashboard-page .main-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.dashboard-page .large {
+  background-color: #f0f0f0;
+  padding: 30px;
+  font-size: 20px;
+  border: 1px solid #ccc;
+}
+
+.dashboard-page .grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 equal columns */
+  gap: 10px;
+}
+
+.dashboard-page .small {
+  background-color: #e0e0e0;
+  padding: 20px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+}
