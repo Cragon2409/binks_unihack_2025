@@ -90,6 +90,8 @@ function App() {
             ID: {(session as any).user.id}
             <br></br>
             Edit <code>src/App.tsx</code> and save to test HMR
+            <br></br>
+            {errorLogMessage}
           </p>
         </div>
         <p className="read-the-docs">
