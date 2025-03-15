@@ -22,12 +22,14 @@ import { setSession } from './API/sessionSlice';
 function App() {
   const courses = useAppSelector(( state ) => state.courses.courses)
   const session = useAppSelector(( state ) => state.session.session)
+  const [loading, setLoading] = useState(true);
   const dispatch = useAppDispatch();
   // const [_errorLogMessage, setErrorLogMessage] = useState("")
-  const [courseTable, _setCourseTable] = useState(null)
+  // const [courseTable, _setCourseTable] = useState(null)
   console.log(courses)
 
   useEffect(() => { // log in effects
+    setLoading(true);
     supabase.auth.getSession().then(({ data: { session } }) => {
       dispatch(setSession(session as React.SetStateAction<null>))
     })
@@ -41,36 +43,25 @@ function App() {
   }, [])
 
   useEffect(() => {
-    dispatch(fetchCourses((session as any)?.user.id));
-  }, []);
+    if (session != null) {
+      dispatch(fetchCourses((session as any)?.user.id));
+      setLoading(false);
+    }
+  }, [session]);
 
-  // useEffect(() => { //retrieve relevant databases for user
-  //   if (session != null) {
-  //     const fetchCourseTable = async () => {
-  //       const {data, error} = await supabase 
-  //         .from('courses')
-  //         .select()
-  //         .in("user_id", [(session as any).user.id])
-
-  //       if (error) {
-  //         setErrorLogMessage("Database failed to retrieve")
-  //       }
-  //       if (data) {
-  //         setCourseTable(data as any)
-  //       }
-
-  //     }
-  //     fetchCourseTable()
-  //   }
-  // }, [session])
-
-  useEffect(() => { //log course table
-    // console.log("Course Table:")
-    // console.log(courseTable)
-  },[courseTable])
-
-  if (!session) { //display log in page if not logged in
-    return (<Auth supabaseClient={supabase} appearance={{ theme: ThemeSupa }} providers={['discord','github']} />)
+  if (loading) {
+    return (
+      <ThemeProvider>
+        <main className="loading-screen-main">
+          <div className="loading-screen" style={{height: "100%", width:"100%", color:"black"}}>
+            loading...
+          </div>
+        </main>
+      </ThemeProvider>
+    )
+  } else if (!session) { //display log in page if not logged in
+    return (
+      <Auth supabaseClient={supabase} appearance={{ theme: ThemeSupa }} providers={['discord','github']} />)
   } else {
     return (
       <ThemeProvider>
