@@ -17,6 +17,7 @@ function App() {
   const [count, setCount] = useState(0)
   const [session, setSession] = useState(null)
 
+
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session as React.SetStateAction<null>)
@@ -49,8 +50,14 @@ function App() {
           <button onClick={() => setCount((count) => count + 1)}>
             count is {count}
           </button>
+          <button onClick={() => {
+            supabase.auth.signOut()
+            setSession(null);
+            }}>
+            Sign Out
+          </button>
           <p>
-            Logged in.
+            Logged in as {(session as any).user.email}.
             <br></br>
             Edit <code>src/App.tsx</code> and save to test HMR
           </p>
