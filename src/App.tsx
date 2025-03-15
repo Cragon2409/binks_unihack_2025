@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Routes, Route } from 'react-router-dom';
 
-import { supabase } from './supabase';
+import { supabase } from './API/supabase';
 
 import AppLayout from './components/Layout/AppLayout'
 import LoginLayout from './components/Layout/LoginLayout'
@@ -20,10 +20,9 @@ import './App.css'
 function App() {
   const courses = useAppSelector(( state ) => state.courses.courses)
   const session = useAppSelector(( state ) => state.session.session)
-  const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
   // const [_errorLogMessage, setErrorLogMessage] = useState("")
-  // const [courseTable, _setCourseTable] = useState(null)
+  const [courseTable, _setCourseTable] = useState(null)
   console.log(courses)
 
   useEffect(() => { // log in effects
@@ -43,7 +42,6 @@ function App() {
   useEffect(() => {
     if (session != null) {
       dispatch(fetchCourses((session as any)?.user.id));
-      setLoading(false);
     }
   }, [session]);
 

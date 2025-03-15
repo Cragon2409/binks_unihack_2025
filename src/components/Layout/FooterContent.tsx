@@ -10,7 +10,7 @@ import * as Constants from '../../common/Constants';
 
 import { useAppSelector } from '../../API/hooks';
 
-import { supabase } from '../../supabase';
+import { supabase } from '../../API/supabase';
 
 const { Text } = Typography;
 

@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { supabase } from '../supabase';
+import { supabase } from './supabase';
 
 // Define a type for the slice state
 export interface AssessmentsState {
