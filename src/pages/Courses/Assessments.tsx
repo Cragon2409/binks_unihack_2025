@@ -1,7 +1,8 @@
 import { useAppDispatch, useAppSelector} from '../../API/hooks'
 import{ Card, Flex, Button  }from"antd";
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { fetchAssessments } from '../../API/assessmentsSlice'
+import AssessmentsModals from './AssessmentsModal';
 
 
 
@@ -18,19 +19,15 @@ export default function Assessments(
   const session = useAppSelector(( state ) => state.session.session)
   const dispatch = useAppDispatch();
   const relevantAssessments = assessments.filter(assessment => assessment.course_id == course.id)
+  const [assessmentCreationModalControl, setAssessmentCreationModalControl] = useState({open : false})
 
 
   useEffect(() => {
     dispatch(fetchAssessments((session as any)?.user.id));
   }, [session]);
 
-  // console.log("Course", course)
-  console.log("ASSEMENT", assessments)
-  console.log("Rel", relevantAssessments)
-
   return (
     <>
-
       <Flex gap="small" >
         {relevantAssessments.map((assessment, index) =>(
           <Card title={assessment.name} key={index}>
@@ -47,28 +44,15 @@ export default function Assessments(
             </div>
           </Card>
         ))}
+        <Button onClick={() => setAssessmentCreationModalControl({open: true})}>
+          Add Assessment
+        </Button>
+        <AssessmentsModals 
+          assessmentCreationModalControl={assessmentCreationModalControl}
+          setAssessmentCreationModalControl={setAssessmentCreationModalControl}
+        />
       </Flex>
     </>
   );
     
 }
-
-
-      {/* <Flex gap="small" >
-        {courseInformation.map((course, index) =>(
-          <Card title={course.name} key={index}>
-            <div>{course.due_date}</div>
-            <div>{course.complete_date}</div>
-            <div>{course.weight}</div>
-            <div>{course.goal_mark}</div>
-            <div>{course.mark}</div>
-            <div>{course.complete}</div>
-
-            <div>
-              <Button>Edit</Button>
-              <Button>Delete</Button>
-            </div>
-          </Card>
-        ))}
-
-      </Flex> */}
