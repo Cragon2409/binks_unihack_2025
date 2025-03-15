@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from './store'
-import { supabase } from '../supabase';
+import { supabase } from './supabase';
 
 // Define a type for the slice state
 export interface CoursesState {

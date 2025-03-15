@@ -2,6 +2,7 @@ import { ThemeConfig, theme } from 'antd';
 import { variants } from '@rose-pine/palette';
 
 export const maxWidth = 1100;
+export const maxWidthLogin = 600;
 
 // Dark (main/default) theme colours
 export const mainBase          = "#" + variants.main.colors.base.hex;
