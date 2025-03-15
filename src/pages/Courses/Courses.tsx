@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Typography, Button, Flex } from 'antd';
+import { Typography, Button, Flex, Modal } from 'antd';
 
 
 const { Title } = Typography;
@@ -11,12 +11,36 @@ const courseButtonStyle: React.CSSProperties = {
 
 export default function Courses() {
   const [courses, setCourses] = useState<string[]>([]);
+  const [isCourseInfoModalOpen, setIsCourseInfoModalOpen] = useState(false);
+  const [isCourseAddModalOpen, setIsCourseAddModalOpen] = useState(false);
+
   const addCourse = () => {
     setCourses([...courses, "Course Name"]);
   };
-  const openCourse = () => {
-    
-  }
+
+  const showCourseInfoModal = () => {
+    setIsCourseInfoModalOpen(true);
+  };
+
+  const showCourseAddModal = () => {
+    setIsCourseAddModalOpen(true);
+  };
+
+  const handleCourseInfoOk = () => {
+    setIsCourseInfoModalOpen(false);
+  };
+
+  const handleCourseInfoCancel = () => {
+    setIsCourseInfoModalOpen(false);
+  };
+
+  const handleCourseAddOk = () => {
+    setIsCourseAddModalOpen(false);
+  };
+
+  const handleCourseAddCancel = () => {
+    setIsCourseAddModalOpen(false);
+  };
 
   return (
     <>
@@ -27,10 +51,18 @@ export default function Courses() {
       <div className="course-container">
         <Flex wrap gap="small">
           {courses.map((course, index) => (
-            <Button style={courseButtonStyle} key={index}> {course} </Button>
+            <Button style={courseButtonStyle} onClick={showCourseAddModal} key={index}> {course} </Button>
           ))}
-            <Button style={courseButtonStyle} onClick={openCourse}> Woah a Course </Button>
+            <Button style={courseButtonStyle} onClick={showCourseInfoModal}> Woah a Course </Button>
         </Flex>
+
+        <Modal title="Add Course Modal" open={isCourseAddModalOpen} onOk={handleCourseAddOk} onCancel={handleCourseAddCancel}>
+          <p>Assessments</p>
+        </Modal>
+        <Modal title="Basic Modal" open={isCourseInfoModalOpen} onOk={handleCourseInfoOk} onCancel={handleCourseInfoCancel}>
+          <p>Assessments</p>
+          <p>Grades</p>
+        </Modal>
       </div>
     </>
   )
