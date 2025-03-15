@@ -16,9 +16,12 @@ const supabase = createClient(SUPABASE_URL, VITE_ANON_KEY)
 function App() {
   const [count, setCount] = useState(0)
   const [session, setSession] = useState(null)
+  const [errorLogMessage, setErrorLogMessage] = useState("")
+  const [courseTable, setCourseTable] = useState(null)
 
 
-  useEffect(() => {
+
+  useEffect(() => { // log in effects
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session as React.SetStateAction<null>)
     })
@@ -32,7 +35,32 @@ function App() {
     return () => subscription.unsubscribe()
   }, [])
 
-  if (!session) {
+  useEffect(() => { //retrieve relevant databases for user
+    if (session != null) {
+      const fetchCourseTable = async () => {
+        const {data, error} = await supabase 
+          .from('courses')
+          .select()
+          .in("user_id", [(session as any).user.id])
+
+        if (error) {
+          setErrorLogMessage("Database failed to retrieve")
+        }
+        if (data) {
+          setCourseTable(data as any)
+        }
+
+      }
+      fetchCourseTable()
+    }
+  }, [session])
+
+  useEffect(() => { //log course table
+    console.log("Course Table:")
+    console.log(courseTable)
+  },[courseTable])
+
+  if (!session) { //display log in page if not logged in
     return (<Auth supabaseClient={supabase} appearance={{ theme: ThemeSupa }} />)
   } else {
     return (
@@ -58,6 +86,8 @@ function App() {
           </button>
           <p>
             Logged in as {(session as any).user.email}.
+            <br></br>
+            ID: {(session as any).user.id}
             <br></br>
             Edit <code>src/App.tsx</code> and save to test HMR
           </p>
