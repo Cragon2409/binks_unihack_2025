@@ -70,7 +70,7 @@ function App() {
   },[courseTable])
 
   if (!session) { //display log in page if not logged in
-    return (<Auth supabaseClient={supabase} appearance={{ theme: ThemeSupa }} />)
+    return (<Auth supabaseClient={supabase} appearance={{ theme: ThemeSupa }} providers={['discord','github']} />)
   } else {
     return (
       <ThemeProvider>
@@ -80,7 +80,7 @@ function App() {
             <Route path="courses" element={<Courses />} />
             <Route path="timetable" element={<Timetable />} />
           </Route>
-      </Routes>
+        </Routes>
       </ThemeProvider>
     );  
   }
