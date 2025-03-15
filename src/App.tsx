@@ -2,20 +2,19 @@ import { useState, useEffect } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
-import { createClient } from '@supabase/supabase-js'
 // import { Database } from './database.types'
 import { Auth } from '@supabase/auth-ui-react'
 import { ThemeSupa } from '@supabase/auth-ui-shared'
-
-const SUPABASE_URL = 'https://quaobmjerksaujqlspoz.supabase.co'
-const VITE_ANON_KEY = process.env.VITE_ANON_KEY ?? ""
-
-const supabase = createClient(SUPABASE_URL, VITE_ANON_KEY)
+import { supabase } from './supabase';
+import { useAppDispatch, useAppSelector } from './API/hooks'
+import { fetchCourses } from './API/coursesSlice'
 
 
 function App() {
   const [count, setCount] = useState(0)
   const [session, setSession] = useState(null)
+  const courses = useAppSelector((state)=>state.courses.courses)
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -30,6 +29,10 @@ function App() {
 
     return () => subscription.unsubscribe()
   }, [])
+
+  useEffect(() => {
+    dispatch(fetchCourses());
+  }, []);
 
   if (!session) {
     return (<Auth supabaseClient={supabase} appearance={{ theme: ThemeSupa }} />)
