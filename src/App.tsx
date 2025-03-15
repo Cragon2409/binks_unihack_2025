@@ -17,55 +17,56 @@ import './App.css'
 import { supabase } from './supabase';
 import { useAppDispatch, useAppSelector } from './API/hooks'
 import { fetchCourses } from './API/coursesSlice'
+import { setSession } from './API/sessionSlice';
 
 function App() {
-  const [session, setSession] = useState(null)
-  const courses = useAppSelector((state)=>state.courses.courses)
+  const courses = useAppSelector(( state ) => state.courses.courses)
+  const session = useAppSelector(( state ) => state.session.session)
   const dispatch = useAppDispatch();
   const [_errorLogMessage, setErrorLogMessage] = useState("")
   const [courseTable, setCourseTable] = useState(null)
+  console.log(courses)
 
   useEffect(() => { // log in effects
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session as React.SetStateAction<null>)
+      dispatch(setSession(session as React.SetStateAction<null>))
     })
-
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session as React.SetStateAction<null>)
+      dispatch(setSession(session as React.SetStateAction<null>))
     })
 
     return () => subscription.unsubscribe()
   }, [])
 
   useEffect(() => {
-    dispatch(fetchCourses((session as any).user.id));
-  }, []);
+    dispatch(fetchCourses((session as any)?.user.id));
+  }, [session]);
 
-  useEffect(() => { //retrieve relevant databases for user
-    if (session != null) {
-      const fetchCourseTable = async () => {
-        const {data, error} = await supabase 
-          .from('courses')
-          .select()
-          .in("user_id", [(session as any).user.id])
+  // useEffect(() => { //retrieve relevant databases for user
+  //   if (session != null) {
+  //     const fetchCourseTable = async () => {
+  //       const {data, error} = await supabase 
+  //         .from('courses')
+  //         .select()
+  //         .in("user_id", [(session as any).user.id])
 
-        if (error) {
-          setErrorLogMessage("Database failed to retrieve")
-        }
-        if (data) {
-          setCourseTable(data as any)
-        }
+  //       if (error) {
+  //         setErrorLogMessage("Database failed to retrieve")
+  //       }
+  //       if (data) {
+  //         setCourseTable(data as any)
+  //       }
 
-      }
-      fetchCourseTable()
-    }
-  }, [session])
+  //     }
+  //     fetchCourseTable()
+  //   }
+  // }, [session])
 
   useEffect(() => { //log course table
-    console.log("Course Table:")
-    console.log(courseTable)
+    // console.log("Course Table:")
+    // console.log(courseTable)
   },[courseTable])
 
   if (!session) { //display log in page if not logged in
