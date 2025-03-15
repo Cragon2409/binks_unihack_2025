@@ -8,6 +8,9 @@ body {
 
 /* Styles for Dashboard */
 
+.dashboard-page {
+  color: black;
+}
 .dashboard-page .new-page {
   font-family: Arial, sans-serif;
   text-align: center;
@@ -20,25 +23,34 @@ body {
 .dashboard-page .main-content {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 0px;
 }
 
 .dashboard-page .large {
-  background-color: #f0f0f0;
+  /* background-color: #18276b; */
   padding: 30px;
+  padding-top:0px;
   font-size: 20px;
-  border: 1px solid #ccc;
+  /* border: 1px solid #ccc; */
 }
 
 .dashboard-page .grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 3 equal columns */
+  grid-template-columns: repeat(3, 1fr);
   gap: 10px;
 }
 
 .dashboard-page .small {
-  background-color: #e0e0e0;
+  /* background-color: #18276b; */
   padding: 20px;
   font-size: 16px;
-  border: 1px solid #ccc;
+  /* border: 1px solid #ccc; */
+}
+
+.dashboard-page div.main-content {
+  background-color: rgb(14, 15, 75);
+  border: green;
+  padding: 10px;
+  border-radius: 50px;
+
 }
