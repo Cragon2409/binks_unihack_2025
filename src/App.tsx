@@ -80,7 +80,7 @@ function App() {
             <Route path="courses" element={<Courses />} />
             <Route path="timetable" element={<Timetable />} />
           </Route>
-      </Routes>
+        </Routes>
       </ThemeProvider>
     );  
   }
