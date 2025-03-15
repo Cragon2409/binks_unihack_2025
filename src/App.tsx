@@ -23,7 +23,7 @@ const supabase = createClient(SUPABASE_URL, VITE_ANON_KEY)
 
 function App() {
   const [session, setSession] = useState(null)
-  const [errorLogMessage, setErrorLogMessage] = useState("")
+  const [_errorLogMessage, setErrorLogMessage] = useState("")
   const [courseTable, setCourseTable] = useState(null)
 
 
