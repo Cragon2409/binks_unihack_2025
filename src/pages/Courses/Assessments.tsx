@@ -26,7 +26,6 @@ export default function Assessments(
   }, [session]);
 
   const handleOpenModal = (_e : any) => {
-    console.log('open')
     setAssessmentModalControl({open: true})
   }
 
@@ -52,7 +51,9 @@ export default function Assessments(
           />
           <Button
             icon={<EditOutlined />} 
-            onClick={(e) => { e.stopPropagation(); handleOpenModal(e); }} 
+            onClick={(e) => { e.stopPropagation(); 
+              setAssessmentModalControl((prev: any) => ({...prev, editMode: true, row: assessment, open : true }));
+              }} 
           />
         </div>
       </Card>
