@@ -20,7 +20,6 @@ export default function Assessments(
   const dispatch = useAppDispatch();
   const relevantAssessments = assessments.filter(assessment => assessment.course_id == course.id)
 
-
   useEffect(() => {
     dispatch(fetchAssessments((session as any)?.user.id));
   }, [session]);
