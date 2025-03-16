@@ -18,6 +18,7 @@ export default function Timetable() {
   const assessments = useAppSelector((state) => state.assessments);
   const session = useAppSelector((state) => state.session.session);
   const dispatch = useAppDispatch();
+  const [ courseFilter, setCourseFilter ] = useState<number[]>([]);
 
   useEffect(() => {
     if (session) {
