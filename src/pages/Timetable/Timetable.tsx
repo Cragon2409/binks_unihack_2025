@@ -9,7 +9,6 @@ import { fetchCourses } from '../../API/coursesSlice';
 
 import { WeeklyCalendar } from '../../components/WeeklyCalendar/WeeklyCalendar';
 import { GenericEvent } from '../../common/Types';
-import { addHours } from 'date-fns';
 
 // import { downloadICS } from './export-funcs';
 const { Text } = Typography;
@@ -20,8 +19,6 @@ export default function Timetable() {
   const session = useAppSelector((state) => state.session.session);
   const dispatch = useAppDispatch();
 
-  const [ courseFilter, setCourseFilter ] = useState<number[]>([]);
-
   useEffect(() => {
     if (session) {
       dispatch(fetchAssessments((session as any)?.user.id));
@@ -30,20 +27,14 @@ export default function Timetable() {
   }, []);
 
   const events: GenericEvent[] = useMemo(() => (
-    assessments.status === 'succeeded' && courses.status === 'succeeded' ?  
-      assessments.assessments
-        .filter((assessment) => courseFilter.includes(assessment.course_id))
-        .map((assessment) => {
-          let dueDate = new Date(assessment.due_date);
-          return {
-            eventId: assessment.id,
-            startTime: dueDate, 
-            endTime: addHours(dueDate, 1),
-            title: assessment.name, 
-            backgroundColor: courses.courses.find((course) => course.id === assessment.course_id).colour_code
-          };
-        }
-      )
+    assessments.status === 'succeeded' ?  
+      assessments.assessments.map((assessment) => ({
+        eventId: assessment.id,
+        startTime: new Date(2025, 2, 12, 12, 0, 0), 
+        endTime: new Date(2025, 2, 12, 14, 30, 0), 
+        title: assessment.title, 
+        backgroundColor: 'red' // TODO: Get colour from course table
+      }))
     : []
   ), [assessments, courseFilter]);
 
@@ -61,12 +52,7 @@ export default function Timetable() {
   useEffect(() => {
     setCourseFilter(courses.courses.map((course) => course.id));
   }, [courses.courses]);
-
-  // onClick={() => downloadICS(
-  //   assessments.assessments.filter((assessment) => courseFilter.includes(assessment.course_id)),
-  //   courses.courses
-  // )}
-
+    
   return (
     <Flex vertical gap='large'>
       <Flex vertical gap='small'>

@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -8,15 +9,12 @@ import {
   Modal
 } from 'antd';
 import type { MenuProps } from 'antd';
-import { UserOutlined } from '@ant-design/icons';
+// import { useAppSelector } from '../../API/hooks';
 
-import { supabase } from '../../API/supabase';
-
-import { useAppSelector } from '../../API/hooks';
 import * as Constants from '../../common/Constants'
 
 
-const { Text, Link } = Typography;
+const { Link } = Typography;
 
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -77,7 +75,6 @@ export default function HeaderContent() {
         maxWidth: Constants.maxWidth,
         width: "100%",
         margin: "0 auto",
-        padding: "12px"
       }} 
       vertical={false} 
       align="center" 
@@ -99,47 +96,11 @@ export default function HeaderContent() {
       >
         Unitrack.
       </Link>
-      <Flex 
-        style={{
-          width: "400px"
-        }}
-        gap="small" 
-        justify='flex-end' 
-        align='center'
-      >
-        <Menu
-          style={{
-            width: "70%"
-          }}
-          mode="horizontal"
-          items={items}
-          selectedKeys={[selectedKey.toString()]}
-          onClick={(e) => setSelectedKey(Number(e.key))}
-          disabledOverflow={false}
-        />
-        <Button 
-          icon={<UserOutlined />} 
-          onClick={showModal}
-        />
-      </Flex>
-      <Modal 
-        title="Profile" 
-        open={isModalOpen} 
-        onOk={handleOk} 
-        onCancel={handleCancel}
-        footer={[
-          <Button 
-            key="submit" 
-            type="primary" 
-            onClick={() => supabase.auth.signOut()}>
-            Logout
-          </Button>,
-        ]}
-      >
-        <Text>
-          {session ? `You are logged in with ${(session as any).user.email}` : ""}
-        </Text>
-      </Modal>
+      <Menu
+        style={{width : "25%"}}
+        mode="horizontal"
+        items={items}
+      />
     </Flex>
   );
 }
