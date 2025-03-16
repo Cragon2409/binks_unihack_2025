@@ -6,13 +6,13 @@ import { useEffect, useState } from 'react'
 
 const { Title } = Typography;
 const WEEKDAYS = [
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-  "Sunday"
+  "Mon",
+  "Tue",
+  "Wed",
+  "Thu",
+  "Fri",
+  "Sat",
+  "Sun"
 ]
 
 function getFormatFromISO(isoDate : string) {
@@ -38,7 +38,7 @@ function getLatestDay(assessments : any) {
     return 0;
   }
 
-  const latestItem = new Date(incompleteAssessments.reduce((latest : any, current : any) => latest.due_date.localeCompare(current.due_date) ? latest : current ))
+  const latestItem = new Date(incompleteAssessments.reduce((latest : any, current : any) => latest.due_date.localeCompare(current.due_date) ? latest : current ).due_date)
 
   const timeDifference = latestItem.getTime() - (new Date()).getTime()
 
@@ -52,6 +52,7 @@ function toggleVisible(selectedCourses : SelectedCourse[], selectedCourse : Sele
 }
 
 function getAssessmentProgress(assessment : any) {
+  if (assessment.length == 0) {return 100}
   return Math.ceil(100 * assessment.filter((item : any) => item.complete).length / assessment.length)
 }
 
@@ -75,7 +76,8 @@ export default function Dashboard() {
     setReloadFlag(!reloadFlag)
   }
 
-  var jarJarHappy = false
+  const currentDate = new Date().toISOString();
+
   var currentCourses : any = courses.filter((course) => {
     return assessments.some((assessment) => assessment.course_id == course.id)
   })
@@ -85,9 +87,11 @@ export default function Dashboard() {
   })
   var countdownDays = getLatestDay(filteredAssesments)
   var assessmentProgress = getAssessmentProgress(filteredAssesments)
+  var jarJarHappy = filteredAssesments.filter((ass : any) => (
+    (ass.complete_date ?? "ZZZZZ").localeCompare(ass.due_date ?? "") && !(ass.complete_date == null && (ass.due_date.localeCompare(currentDate)))
+  )).length <= (filteredAssesments.length / 2)  
 
 
-  const currentDate = new Date().toISOString();
 
   useEffect(() => {
       dispatch(fetchCourses((session as any)?.user.id));
@@ -95,8 +99,8 @@ export default function Dashboard() {
   }, [session]);
 
   useEffect(() => {
-    console.log(assessments)
-    assessments.slice().sort((a,b) => (b.due_date ?? "").localeCompare((a.due_date ?? "").toString()))
+    // console.log(assessments)
+    // assessments.slice().sort((a,b) => (b.due_date ?? "").localeCompare((a.due_date ?? "").toString()))
     //assessments.sort((a,b) => b.toString().localeCompare(a.toString()))
     countdownDays = getLatestDay(filteredAssesments)
     assessmentProgress = getAssessmentProgress(filteredAssesments)
@@ -129,7 +133,9 @@ export default function Dashboard() {
 
   countdownDays = getLatestDay(filteredAssesments)
   assessmentProgress = getAssessmentProgress(filteredAssesments)
-
+  jarJarHappy = filteredAssesments.filter((ass : any) => (
+      (ass.complete_date ?? "ZZZZZ").localeCompare(ass.due_date ?? "") && !(ass.complete_date == null && (ass.due_date.localeCompare(currentDate)))
+    )).length <= (filteredAssesments.length / 2) 
 
 
   return (
@@ -157,7 +163,7 @@ export default function Dashboard() {
         <div className="large">
         <List
           style={{backgroundColor : token.colorBgBase, overflow: "auto", height:"30vh"}}
-          header={<div>Upcoming Assessments</div>}
+          header={<div><Typography.Link href="/timetable" rel="noopener noreferrer">Upcoming Assessments</Typography.Link></div>}
           bordered
           dataSource={filteredAssesments.filter((item : any)=> item.due_date.localeCompare(currentDate))}
           renderItem={(item : any) => {
@@ -203,7 +209,7 @@ export default function Dashboard() {
           <div className="small">
             <List
               style={{ height: "20vh", backgroundColor : token.colorBgBase,  overflow: "auto"}}
-              header={<div>Courses</div>}
+              header={<div><Typography.Link href="/courses" rel="noopener noreferrer">Courses</Typography.Link></div>}
               bordered
               dataSource={courses}
               renderItem={(course) => {
@@ -254,7 +260,16 @@ export default function Dashboard() {
               {(countdownDays == 0) ? (
                 <>All done! Congratulations!</>
               ) : (
-                <>{countdownDays} days left!</>
+                <>
+                  <Flex align="center" vertical>
+                    <Typography.Text style={{fontSize:"6vh"}}>
+                      {countdownDays}
+                    </Typography.Text>
+                    <Typography.Text  style={{fontSize:"1.5vh"}}>
+                        days left!
+                    </Typography.Text>
+                  </Flex>
+                </>
               )}
               
             </Card>
@@ -267,7 +282,7 @@ export default function Dashboard() {
                   {(assessmentProgress == 100) ? (
                     <>All Assignments Done!</>
                   ) : (
-                    <>{Math.round((1 - assessmentProgress / 100) * assessments.length)} Assessments Remaining </>
+                    <>{Math.round((1 - assessmentProgress / 100) * assessments.length)} Assessment{(Math.round((1 - assessmentProgress / 100) * assessments.length) != 1) ? ("s") : ("")} Remaining </>
                   )}
                 </Typography.Text>
               </Flex>
