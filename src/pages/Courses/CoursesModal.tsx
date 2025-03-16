@@ -25,12 +25,16 @@ export default function CoursesModal(
         setCourseModalControl({ open: false });
     }
 
+    const handleModalCancel = () => {
+      setCourseModalControl({ open: false });
+    }
+
     return (
     <>
       <Modal title="Add a Course" 
             open={courseModalControl.open} 
             onOk={handleModalSubmit} 
-            onCancel={handleModalSubmit}>
+            onCancel={handleModalCancel}>
         <Input
             placeholder="Enter course name"
             value={text}
