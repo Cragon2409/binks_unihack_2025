@@ -42,6 +42,7 @@ const items: MenuItem[] = [
       <Link href="/timetable" rel="noopener noreferrer">
         Timetable
       </Link>
+    )
   }
 ];
 
