@@ -11,7 +11,7 @@ import { WeeklyCalendar } from '../../components/WeeklyCalendar/WeeklyCalendar';
 import { GenericEvent } from '../../common/Types';
 import { addHours } from 'date-fns';
 
-// import { downloadICS } from './export-funcs';
+import { downloadICS } from './export-funcs';
 const { Text } = Typography;
 
 export default function Timetable() {
@@ -62,11 +62,6 @@ export default function Timetable() {
     setCourseFilter(courses.courses.map((course) => course.id));
   }, [courses.courses]);
 
-  // onClick={() => downloadICS(
-  //   assessments.assessments.filter((assessment) => courseFilter.includes(assessment.course_id)),
-  //   courses.courses
-  // )}
-
   return (
     <Flex vertical gap='large'>
       <Flex vertical gap='small'>
@@ -85,12 +80,16 @@ export default function Timetable() {
             />
 
             <Button 
-            type="primary" 
-            icon={<DownloadOutlined />} 
-            size={"large"}
-          >
-            Download .ics file
-          </Button>
+              type="primary" 
+              icon={<DownloadOutlined />} 
+              size={"large"}
+              onClick={() => downloadICS(
+                assessments.assessments.filter((assessment) => courseFilter.includes(assessment.course_id)),
+                courses.courses
+              )}
+            >
+              Download .ics file
+            </Button>
         </Flex>
       </Flex>
       <WeeklyCalendar 
