@@ -1,126 +1,120 @@
-import type { DatePickerProps, MenuProps  } from 'antd';
-import { Button, Modal, Input, DatePicker, Dropdown, Space } from 'antd';
-import { DownOutlined } from '@ant-design/icons';
-// import { useAppDispatch, useAppSelector } from '../../API/hooks';
-// import { createAssessment } from '../../API/assessmentsSlice';
-import { useState } from 'react';
+import { Modal, Input, Form, InputNumber, Checkbox, DatePicker, Space } from 'antd';
+import { useAppDispatch, useAppSelector } from '../../API/hooks'
+import { createAssessment } from '../../API/assessmentsSlice';
+import { useState } from 'react'
+import type { DatePickerProps } from 'antd';
+import dayjs, { Dayjs } from 'dayjs';
 
-
-
-interface AssessmentsModalProps {
-    assessmentCreationModalControl: any
-    setAssessmentCreationModalControl: any
+interface AssModalProps {
+    assModalControl: any
+    setAssModalControl: any
+    courseId: number
   }
 
 export default function AssessmentsModal(
-    { assessmentCreationModalControl, setAssessmentCreationModalControl} : AssessmentsModalProps
+    { assModalControl, setAssModalControl, courseId} : AssModalProps
 ) {
-    // const session = useAppSelector(( state ) => state.session.session)
-    // const dispatch = useAppDispatch();
-    // const user_id = (session as any)?.user.id
-    const [selectedOption, setSelectedOption] = useState<string>("Is the Assessment Complete?");
-    // const [nameText, setNameText] = useState(''); 
-    const [selectedDueDate, setSelectedDueDate] = useState<any>(null);
-    const [selectedCompletedDate, setSelectedCompletedDate] = useState<any>(null);
+    const session = useAppSelector(( state ) => state.session.session)
+    const dispatch = useAppDispatch();
+    const [name, setName] = useState(''); 
+    const [dueDate, setDueDate] = useState<Dayjs>(dayjs()); 
+    const [weight, setWeight] = useState<number | null>(null); 
+    const [goal, setGoal] = useState<number | null>(null); 
+    const [grade, setGrade] = useState<number | null>(null);
+    const [complete, setComplete] = useState(false)
+    const user_id = (session as any)?.user.id
 
+    const handleDateChange: DatePickerProps['onOk'] = (value) => {
+        if (value) {
+            setDueDate(value); // Convert moment object to a string
+        }
+    };
 
-    const handleMenuClick: MenuProps["onClick"] = (e) => {
-        setSelectedOption(e.key || "Is the Assessment Complete?");
-      };
+    const handleWeightChange = (value: number | null) => {
+        setWeight(value ? value : null);
+    };
 
-    const clearFields = () => {
-        setSelectedDueDate(null)
-        setSelectedCompletedDate(null)
-    }
+    const handleGoalChange = (value: number | null) => {
+        setGoal(value ? value : null);
+    };
+
+    const handleGradeChange = (value: number | null) => {
+        setGrade(value ? value : null);
+    };
 
     const handleModalSubmit = () => {
-        // const assessment = {user_id : user_id, name : text}
-        // dispatch(createAssessment(assessment))
-        setAssessmentCreationModalControl({ open: false });
-        clearFields();
+        const assessment = {
+            user_id : user_id,
+            course_id: courseId,
+            name: name,
+            due_date: dueDate.toISOString(),
+            weight: weight,
+            goal_mark: goal,
+            mark: grade,
+            complete: complete
+         }
+        dispatch(createAssessment(assessment))
+        setAssModalControl({ open: false });
+        setName('')
+        setDueDate(dayjs())
+        setWeight(0)
+        setGoal(0)
+        setGrade(0)
+        setComplete(false)
     }
-
-    const handleModalCancel = () => {
-        setAssessmentCreationModalControl({ open: false });
-        clearFields();
-    }
-
-    const items: MenuProps["items"] = [
-        {
-          key: "Completed",
-          label: "Completed",
-        },
-        {
-          key: "Not Completed",
-          label: "Not Completed",
-        },
-    ];
-    
-    const onOkDue = (value: DatePickerProps['value'] ) => {
-        console.log('onOk: ', value);
-        setSelectedDueDate(value)
-    };
-
-    const onOkComplete = (value: DatePickerProps['value'] ) => {
-        console.log('onOk: ', value);
-        setSelectedCompletedDate(value)
-    };
-
     return (
     <>
-      <Modal title="Add a Assessment" 
-            open={assessmentCreationModalControl.open}
-            afterClose={() => setSelectedOption("Is the Assessment Complete?")}
+      <Modal title="Add an Assessment" 
+            open={assModalControl.open} 
             onOk={handleModalSubmit} 
-            onCancel={handleModalCancel}
-            className="TEST">
-            
-        <Input
-            placeholder="Enter Assessment Name"
-            // value={nameText}
-        />
-        <DatePicker
-            placeholder="Select Due Date"
-            showTime
-            value={selectedDueDate}
-            onChange={(value, dateString) => {
-                console.log('Selected Time: ', value);
-                console.log('Formatted Selected Time: ', dateString);
-            }}
-            onOk={onOkDue}
-        />
-        <DatePicker
-            placeholder="Select Completed Date"
-            showTime
-            value={selectedCompletedDate}
-            onChange={(value, dateString) => {
-                console.log('Selected Time: ', value);
-                console.log('Formatted Selected Time: ', dateString);
-            }}
-            onOk={onOkComplete}
-        />
-        <Input
-            placeholder="Enter Weight of Assessment"
-            // value={text}
-        />
-        <Input
-            placeholder="Enter Target Marks"
-            // value={text}
-        />
-        <Input
-            placeholder="Enter Current Marks"
-            // value={text}
-        />
-        <Dropdown menu={{ items, onClick: handleMenuClick }}>
-            <a onClick={(e) => e.preventDefault()}>
+            onCancel={handleModalSubmit}>
+        <Form layout="vertical">
+            <Form.Item label="Assessment Name">
+                <Input
+                    placeholder="Enter assessment name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                />
+            </Form.Item>
+
+            <Form.Item label="Due Date">
+                <DatePicker showTime onOk={handleDateChange} />
+            </Form.Item>
+
+            <Form.Item label="Weight | Goal | Grade (Optional) (%)">
                 <Space>
-                    <Button>
-                        {selectedOption}
-                        <DownOutlined />
-                    </Button>
+                <InputNumber<number>
+                    value={weight}
+                    min={0}
+                    max={100}
+                    formatter={(value) => `${value}%`}
+                    parser={(value) => value?.replace('%', '') as unknown as number}
+                    onChange={handleWeightChange}
+                    />
+                <InputNumber<number>
+                    value={goal}
+                    min={0}
+                    max={100}
+                    formatter={(value) => `${value}%`}
+                    parser={(value) => value?.replace('%', '') as unknown as number}
+                    onChange={handleGoalChange}
+                    />
+                <InputNumber<number>
+                    value={grade}
+                    min={0}
+                    max={100}
+                    formatter={(value) => `${value}%`}
+                    parser={(value) => value?.replace('%', '') as unknown as number}
+                    onChange={(handleGradeChange)}
+                    />
                 </Space>
-            </a>
-        </Dropdown>
+            </Form.Item>
+
+            <Form.Item label="Status">
+                <Checkbox onChange={(e) => setComplete(e.target.checked)}>Complete?</Checkbox>
+            </Form.Item>
+
+            </Form>
       </Modal>
     </>
   );

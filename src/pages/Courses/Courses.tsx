@@ -1,11 +1,13 @@
 
-import { Typography, Flex, Modal, Button } from 'antd';
+import { Typography, Flex, Modal, Button, Space } from 'antd';
 import "./Courses.css"
 import { useAppDispatch, useAppSelector } from '../../API/hooks'
-import { fetchCourses } from '../../API/coursesSlice'
+import { deleteCourse, fetchCourses } from '../../API/coursesSlice'
 import { useEffect, useState } from 'react'
 import CoursesModal from './CoursesModal';
 import Assessment from './Assessments';
+import { DeleteOutlined } from '@ant-design/icons';
+import { PlusOutlined } from '@ant-design/icons';
 
 
 
@@ -17,7 +19,7 @@ export default function Courses() {
   const session = useAppSelector(( state ) => state.session.session)
   const dispatch = useAppDispatch();
   const [courseModalControl, setCourseModalControl] = useState({open : false})
-  const [assessmentModalControl, setAssessmentModalControl] = useState({open : false})
+  const [assessmentModalControl, setAssessmentModalControl] = useState({open : false, editMode : false})
 
 
   useEffect(() => {
@@ -43,26 +45,62 @@ export default function Courses() {
     setIsCourseInfoModalOpen(false);
   };
 
+  const handleCourseDelete = (courseId: number) => {
+          dispatch(deleteCourse(courseId))
+      }
+  
+  const getCourseCards = () => {
+    let cards = courses.map((course, index) => (
+      <Space key={index} direction="horizontal" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+      <Button 
+        className="course-button"
+        style={{ 
+          border: `2px solid ${course.colour_code}`
+        }}
+        onClick={() => showCourseInfoModal(course)}
+      > 
+        {course.name}
+        <div 
+          style={{
+            position: "absolute", 
+            bottom: "5px", 
+            right: "5px", 
+            display: "flex", 
+            gap: "5px"
+          }}
+        >
+          <Button 
+            icon={<DeleteOutlined />} 
+            onClick={(e) => { e.stopPropagation(); handleCourseDelete(course.id); }} 
+            danger 
+            size="small"
+          />
+        </div>
+      </Button>
+    </Space>
+    ))
+    const createCardButton = (
+      <Space key={cards.length} direction="horizontal" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+        <Button 
+          className="course-button"
+          onClick={() => setCourseModalControl({open: true})}
+        > 
+          <PlusOutlined style={{ fontSize: "30px" }} />
+        </Button>
+      </Space>)
+    cards.push(createCardButton)
+    return cards
+  }
+  
+
   return (
     <>
       <Flex gap="small" align="center">
         <Title>Courses</Title>
-        <Button onClick={() => setCourseModalControl({open: true})}> Add Course </Button>
       </Flex>
       <div className="course-container">
         <Flex wrap gap="small">
-        {courses.map((course, index) => (
-            <Button 
-              className="course-button"
-              style={{ 
-                border: `2px solid ${course.colour_code}`
-              }}
-              onClick={() => showCourseInfoModal(course)} 
-              key={index}
-            > 
-              {course.name} 
-            </Button>
-          ))}
+        {getCourseCards()}
         </Flex>
 
         <CoursesModal
