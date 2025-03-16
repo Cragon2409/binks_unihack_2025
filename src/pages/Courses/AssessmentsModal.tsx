@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector } from '../../API/hooks'
 import { createAssessment } from '../../API/assessmentsSlice';
 import { useState } from 'react'
 import type { DatePickerProps } from 'antd';
+import dayjs, { Dayjs } from 'dayjs';
 
 interface AssModalProps {
     assModalControl: any
@@ -16,7 +17,7 @@ export default function AssessmentsModal(
     const session = useAppSelector(( state ) => state.session.session)
     const dispatch = useAppDispatch();
     const [name, setName] = useState(''); 
-    const [dueDate, setDueDate] = useState(''); 
+    const [dueDate, setDueDate] = useState<Dayjs>(dayjs()); 
     const [weight, setWeight] = useState<number | null>(null); 
     const [goal, setGoal] = useState<number | null>(null); 
     const [grade, setGrade] = useState<number | null>(null);
@@ -25,7 +26,7 @@ export default function AssessmentsModal(
 
     const handleDateChange: DatePickerProps['onOk'] = (value) => {
         if (value) {
-            setDueDate(value.toISOString()); // Convert moment object to a string
+            setDueDate(value); // Convert moment object to a string
         }
     };
 
@@ -46,7 +47,7 @@ export default function AssessmentsModal(
             user_id : user_id,
             course_id: courseId,
             name: name,
-            due_date: dueDate,
+            due_date: dueDate.toISOString(),
             weight: weight,
             goal_mark: goal,
             mark: grade,
@@ -54,6 +55,12 @@ export default function AssessmentsModal(
          }
         dispatch(createAssessment(assessment))
         setAssModalControl({ open: false });
+        setName('')
+        setDueDate(dayjs())
+        setWeight(0)
+        setGoal(0)
+        setGrade(0)
+        setComplete(false)
     }
 
     return (
@@ -78,7 +85,7 @@ export default function AssessmentsModal(
             <Form.Item label="Weight | Goal | Grade (Optional) (%)">
                 <Space>
                 <InputNumber<number>
-                    defaultValue={0}
+                    value={weight}
                     min={0}
                     max={100}
                     formatter={(value) => `${value}%`}
@@ -86,7 +93,7 @@ export default function AssessmentsModal(
                     onChange={handleWeightChange}
                     />
                 <InputNumber<number>
-                    defaultValue={0}
+                    value={goal}
                     min={0}
                     max={100}
                     formatter={(value) => `${value}%`}
@@ -94,7 +101,7 @@ export default function AssessmentsModal(
                     onChange={handleGoalChange}
                     />
                 <InputNumber<number>
-                    defaultValue={0}
+                    value={grade}
                     min={0}
                     max={100}
                     formatter={(value) => `${value}%`}
@@ -105,7 +112,7 @@ export default function AssessmentsModal(
             </Form.Item>
 
             <Form.Item label="Status">
-                <Checkbox onChange={(e) => setComplete(e.target.checked)}>Complete?</Checkbox>; 
+                <Checkbox onChange={(e) => setComplete(e.target.checked)}>Complete?</Checkbox>
             </Form.Item>
 
             </Form>
