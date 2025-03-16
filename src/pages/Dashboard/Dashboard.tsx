@@ -95,9 +95,7 @@ export default function Dashboard() {
   }, [session]);
 
   useEffect(() => {
-    console.log(assessments)
     assessments.slice().sort((a,b) => (b.due_date ?? "").localeCompare((a.due_date ?? "").toString()))
-    //assessments.sort((a,b) => b.toString().localeCompare(a.toString()))
     countdownDays = getLatestDay(filteredAssesments)
     assessmentProgress = getAssessmentProgress(filteredAssesments)
     currentCourses = courses.filter((course) => {
