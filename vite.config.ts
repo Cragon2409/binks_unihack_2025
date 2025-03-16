@@ -14,9 +14,6 @@ export default defineConfig(({ mode }) => {
         define: {
             'process.env': env
         },
-        plugins: [react()],
-        optimizeDeps: {
-            include: ['yup'] 
-        }
+        plugins: [react()]
     };
 });
