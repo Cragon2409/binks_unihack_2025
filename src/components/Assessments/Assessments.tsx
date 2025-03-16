@@ -3,7 +3,7 @@ import{ Card, Flex, Button, Typography  }from"antd";
 import { useEffect } from 'react'
 import { deleteAssessment, fetchAssessments } from '../../API/assessmentsSlice'
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
-import AssessmentsModal from './AssessmentsModal'
+import AssessmentsModal from './AssessmentsModal';
 
 const { Text } = Typography;
 
@@ -27,7 +27,6 @@ export default function Assessments(
   }, [session]);
 
   const handleOpenModal = (_e : any) => {
-    console.log('open')
     setAssessmentModalControl({open: true})
   }
 
@@ -61,7 +60,10 @@ export default function Assessments(
             />
             <Button
               icon={<EditOutlined />} 
-              onClick={(e) => { e.stopPropagation(); handleOpenModal(e); }} 
+              onClick={(e) => { 
+                e.stopPropagation(); 
+                setAssessmentModalControl((prev: any) => ({...prev, editMode: true, row: assessment, open : true }));
+              }} 
             />
           </Flex>
         </Flex>

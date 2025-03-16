@@ -1,4 +1,4 @@
-import { Typography, Checkbox, Flex, List, Card, Progress, theme } from 'antd';
+import { Typography, Checkbox, Flex, List, Card, Progress, Row, Col, theme } from 'antd';
 import { fetchAssessments } from '../../API/assessmentsSlice';
 import { fetchCourses } from '../../API/coursesSlice'
 import { useAppDispatch, useAppSelector } from '../../API/hooks'
@@ -171,14 +171,24 @@ export default function Dashboard() {
               const course = getItemCourse(item, courses)
               return (
                 <List.Item>
-                  <Flex align="center" gap={350}>
-                    <Typography.Text style={{backgroundColor : course.colour_code}}>{course.name}</Typography.Text> 
-                    <Typography.Text>{getFormatFromISO(item.due_date)}</Typography.Text>
-                    <div>
-                      <Checkbox defaultChecked={(item.complete)} />
-
-                    </div>
-                  </Flex>
+                  <Row style={{width: "100%"}} gutter={[16, 16]}>
+                    <Col span={8}>
+                      <Typography.Text 
+                        style={{
+                          width: 300,
+                          backgroundColor : course.colour_code
+                        }}
+                      >
+                        {item.name}
+                      </Typography.Text> 
+                    </Col>
+                    <Col span={8}>
+                      <Typography.Text>{getFormatFromISO(item.due_date)}</Typography.Text>
+                    </Col>
+                    <Col span={8}>
+                    <Checkbox defaultChecked={(item.complete)} />
+                    </Col>
+                  </Row>
                 </List.Item>
               )
             }
