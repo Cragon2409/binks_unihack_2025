@@ -1,4 +1,4 @@
-import { Space, Modal, Input, ColorPicker, Typography } from 'antd';
+import { Modal, Input, ColorPicker, Typography } from 'antd';
 import { useAppDispatch, useAppSelector } from '../../API/hooks'
 import { createCourse } from '../../API/coursesSlice'
 import { useState } from 'react'
@@ -27,25 +27,27 @@ export default function CoursesModal(
         setCourseModalControl({ open: false });
     }
 
+    const handleModalCancelAlt = () => {
+      console.log("Fi Fo Fum")
+      setCourseModalControl({ open: false });
+    }
+
     return (
-    <Modal title="Add a Course" 
-      open={courseModalControl.open} 
-      onOk={handleModalSubmit} 
-      onCancel={handleModalSubmit}
-    >
-        <Space direction='vertical'>
-          <Input
-            placeholder="Enter course name"
-            value={text}
-            onChange={(e) => setText(e.target.value)}
+      <Modal title="Add a Course" 
+        open={courseModalControl.open} 
+        onOk={handleModalSubmit} 
+        onCancel={handleModalCancelAlt}>
+        <Input
+          placeholder="Enter course name"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
           />
-          <ColorPicker
-            value={color}
-            onChange={(value) => setColor(value!.toHexString())}
-            showText={() => <Text>Course colour</Text>}
+        <ColorPicker
+          value={color}
+          onChange={(value) => setColor(value!.toHexString())}
+          showText={() => <Text>Course colour</Text>}
           />       
-        </Space>      
-    </Modal>
+     </Modal>
   );
     
 }
