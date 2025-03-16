@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Flex, Select, Typography } from 'antd';
 import type { SelectProps } from 'antd';
 
@@ -8,6 +8,7 @@ import { fetchCourses } from '../../API/coursesSlice';
 
 import { WeeklyCalendar } from '../../components/WeeklyCalendar/WeeklyCalendar';
 import { GenericEvent } from '../../common/Types';
+import { addHours } from 'date-fns';
 
 const { Text } = Typography;
 
@@ -17,6 +18,8 @@ export default function Timetable() {
   const session = useAppSelector((state) => state.session.session);
   const dispatch = useAppDispatch();
 
+  const [ courseFilter, setCourseFilter ] = useState<number[]>([]);
+
   useEffect(() => {
     if (session) {
       dispatch(fetchAssessments((session as any)?.user.id));
@@ -25,17 +28,23 @@ export default function Timetable() {
   }, []);
 
   const events: GenericEvent[] = useMemo(() => (
-    assessments.status === 'succeeded' ?  
-      assessments.assessments.map((assessment) => ({
-        eventId: assessment.id,
-        startTime: new Date(2025, 2, 12, 12, 0, 0), 
-        endTime: new Date(2025, 2, 12, 14, 30, 0), 
-        title: assessment.title, 
-        backgroundColor: 'red' // TODO: Get colour from course table
-      }))
+    assessments.status === 'succeeded' && courses.status === 'succeeded' ?  
+      assessments.assessments
+        .filter((assessment) => courseFilter.includes(assessment.course_id))
+        .map((assessment) => {
+          let dueDate = new Date(assessment.due_date);
+          return {
+            eventId: assessment.id,
+            startTime: dueDate, 
+            endTime: addHours(dueDate, 1),
+            title: assessment.name, 
+            backgroundColor: courses.courses.find((course) => course.id === assessment.course_id).colour_code
+          };
+        }
+      )
     : []
-  ), [assessments]);
-
+  ), [assessments, courseFilter]);
+    
   const options: SelectProps['options'] = useMemo(() => (
     courses.status === 'succeeded' ?
       courses.courses.map((course) => (
@@ -46,6 +55,10 @@ export default function Timetable() {
       ))
    : []
   ), [courses]);
+
+  useEffect(() => {
+    setCourseFilter(courses.courses.map((course) => course.id));
+  }, [courses.courses]);
 
   return (
     <Flex vertical gap='large'>
@@ -58,8 +71,8 @@ export default function Timetable() {
           allowClear
           style={{ width: '100%' }}
           placeholder='Select courses'
-          defaultValue={[]}
-          onChange={() => {}}
+          value={courseFilter}
+          onChange={(values) => {setCourseFilter(values)}}
           options={options}
         />
       </Flex>
