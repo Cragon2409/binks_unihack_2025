@@ -11,7 +11,7 @@ import { WeeklyCalendar } from '../../components/WeeklyCalendar/WeeklyCalendar';
 import { GenericEvent } from '../../common/Types';
 import { addHours } from 'date-fns';
 
-import { downloadICS } from './export-funcs';
+// import { downloadICS } from './export-funcs';
 const { Text } = Typography;
 
 export default function Timetable() {
@@ -46,7 +46,7 @@ export default function Timetable() {
       )
     : []
   ), [assessments, courseFilter]);
-    
+
   const options: SelectProps['options'] = useMemo(() => (
     courses.status === 'succeeded' ?
       courses.courses.map((course) => (
@@ -61,6 +61,11 @@ export default function Timetable() {
   useEffect(() => {
     setCourseFilter(courses.courses.map((course) => course.id));
   }, [courses.courses]);
+
+  // onClick={() => downloadICS(
+  //   assessments.assessments.filter((assessment) => courseFilter.includes(assessment.course_id)),
+  //   courses.courses
+  // )}
 
   return (
     <Flex vertical gap='large'>
@@ -83,10 +88,6 @@ export default function Timetable() {
             type="primary" 
             icon={<DownloadOutlined />} 
             size={"large"}
-            onClick={() => downloadICS(
-              assessments.assessments.filter((assessment) => courseFilter.includes(assessment.course_id)),
-              courses.courses
-            )}
           >
             Download .ics file
           </Button>
