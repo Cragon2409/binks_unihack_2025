@@ -38,7 +38,7 @@ function getLatestDay(assessments : any) {
     return 0;
   }
 
-  const latestItem = new Date(incompleteAssessments.reduce((latest : any, current : any) => latest.due_date.localeComapre(current.due_date) ? latest : current ))
+  const latestItem = new Date(incompleteAssessments.reduce((latest : any, current : any) => latest.due_date.localeCompare(current.due_date) ? latest : current ))
 
   const timeDifference = latestItem.getTime() - (new Date()).getTime()
 
@@ -95,11 +95,13 @@ export default function Dashboard() {
   }, [session]);
 
   useEffect(() => {
-    assessments.sort((a,b) => b.localeCompare(a))
+    console.log(assessments)
+    assessments.slice().sort((a,b) => (b.due_date ?? "").localeCompare((a.due_date ?? "").toString()))
+    //assessments.sort((a,b) => b.toString().localeCompare(a.toString()))
     countdownDays = getLatestDay(filteredAssesments)
     assessmentProgress = getAssessmentProgress(filteredAssesments)
     currentCourses = courses.filter((course) => {
-      return assessments.some((assessment) => assessment.course_id == course.id)
+      return assessments?.some((assessment) => assessment.course_id == course.id)
     })
 
     var tempSelectedCourses : SelectedCourse[] = [];

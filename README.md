@@ -11,6 +11,7 @@ Made for [Unihack 2025](https://www.unihack.net/).
 - [React Redux](https://www.npmjs.com/package/react-redux)
 - [Redux Persist](https://www.npmjs.com/package/redux-persist)
 - [date-fns](https://www.npmjs.com/package/date-fns)
+- [ics](https://www.npmjs.com/package/ics)
 
 ## Code Sources
 - [Ant Weekly Calendar](https://github.com/codeuniversity/antd-weekly-calendar)
