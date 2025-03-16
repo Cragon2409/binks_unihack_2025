@@ -26,7 +26,6 @@ export default function CoursesModal(
     }
 
     const handleModalCancelAlt = () => {
-      console.log("Fi Fo Fum")
       setCourseModalControl({ open: false });
     }
 
