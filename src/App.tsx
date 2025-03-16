@@ -21,14 +21,9 @@ import './App.css'
 
 
 function App() {
-  const courses = useAppSelector(( state ) => state.courses.courses)
   const session = useAppSelector(( state ) => state.session.session)
 
   const dispatch = useAppDispatch();
-  // const [_errorLogMessage, setErrorLogMessage] = useState("")
-  // const [courseTable, _setCourseTable] = useState(null)
-
-  console.log(courses)
 
   useEffect(() => { // log in effects
     // setLoading(true);

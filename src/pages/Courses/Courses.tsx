@@ -19,15 +19,13 @@ export default function Courses() {
   const session = useAppSelector(( state ) => state.session.session)
   const dispatch = useAppDispatch();
   const [courseModalControl, setCourseModalControl] = useState({open : false})
-  const [assessmentModalControl, setAssessmentModalControl] = useState({open : false, editMode : false})
+  const [assessmentModalControl, setAssessmentModalControl] = useState({open : false, editMode : false, row : null})
+  
 
 
   useEffect(() => {
     dispatch(fetchCourses((session as any)?.user.id));
   }, [session]);
-
-  // console.log("SESSION", session)
-  // console.log("COURSES", courses)
 
   const [isCourseInfoModalOpen, setIsCourseInfoModalOpen] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState<any>(null);

@@ -78,7 +78,7 @@ export const createAssessment = createAsyncThunk(
 
 export const updateAssessment = createAsyncThunk(
     'assessments/updateAssessment',
-    async (id: number, assessment: any) => {
+    async ({ id, assessment }: { id: number, assessment: any }) => {
       const newAssessment = await updateAssessments(id, assessment);
       return newAssessment;
     }
@@ -127,7 +127,9 @@ export const assessmentsSlice = createSlice({
       })
       .addCase(updateAssessment.fulfilled, (state, action: PayloadAction<any>) => {
         state.status = 'succeeded';
-        state.assessments.push(action.payload);
+        state.assessments = state.assessments.map((assessment) =>
+          assessment.id === action.payload.id ? action.payload : assessment
+        );
       })
       .addCase(updateAssessment.rejected, (state, action) => {
         state.status = 'failed';
@@ -138,9 +140,7 @@ export const assessmentsSlice = createSlice({
       })
       .addCase(deleteAssessment.fulfilled, (state, action: PayloadAction<any>) => {
         state.status = 'succeeded';
-        state.assessments = state.assessments.map(assessment =>
-            assessment.id === action.payload.id ? action.payload : assessment
-          );
+        state.assessments = state.assessments.filter(assessment => assessment.id !== action.payload.id);
       })
       .addCase(deleteAssessment.rejected, (state, action) => {
         state.status = 'failed';
