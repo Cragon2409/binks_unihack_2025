@@ -4,31 +4,26 @@ import { Routes, Route } from 'react-router-dom';
 
 import { supabase } from './API/supabase';
 
-import AppLayout from './components/Layout/AppLayout'
-// import LoginLayout from './components/Layout/LoginLayout'
-import ThemeProvider from './components/ThemeProvider/ThemeProvider'
+import AppLayout from './components/Layout/AppLayout';
+import LoginLayout from './components/Layout/LoginLayout';
+import ThemeProvider from './components/ThemeProvider/ThemeProvider';
 import Dashboard from './pages/Dashboard/Dashboard';
 import Courses from './pages/Courses/Courses';
 import Timetable from './pages/Timetable/Timetable';
 import Login from './pages/Login/Login';
-import LoginLayout from './components/Layout/LoginLayout'
+import PasswordReset from './pages/PasswordReset/PasswordReset';
 
-import { useAppDispatch, useAppSelector } from './API/hooks'
-import { fetchCourses } from './API/coursesSlice'
+
+import { useAppDispatch, useAppSelector } from './API/hooks';
+import { fetchCourses } from './API/coursesSlice';
 import { setSession } from './API/sessionSlice';
 
-import './App.css'
-
+import './App.css';
 
 function App() {
-  const courses = useAppSelector(( state ) => state.courses.courses)
   const session = useAppSelector(( state ) => state.session.session)
 
   const dispatch = useAppDispatch();
-  // const [_errorLogMessage, setErrorLogMessage] = useState("")
-  // const [courseTable, _setCourseTable] = useState(null)
-
-  console.log(courses)
 
   useEffect(() => { // log in effects
     // setLoading(true);
@@ -69,6 +64,7 @@ function App() {
           :
           (
             <Route path="/*" element={<LoginLayout />}>
+              <Route path="auth" element={<PasswordReset supabase={supabase} />} />
               <Route path="*" element={<Login supabase={supabase} />} />
             </Route>
           )

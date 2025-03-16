@@ -1,6 +1,7 @@
-import { useEffect, useMemo } from 'react';
-import { Flex, Select, Typography } from 'antd';
+import { useState, useEffect, useMemo } from 'react';
+import { Flex, Select, Typography, Button } from 'antd';
 import type { SelectProps } from 'antd';
+import { DownloadOutlined } from '@ant-design/icons';
 
 import { useAppSelector, useAppDispatch } from '../../API/hooks';
 import { fetchAssessments } from '../../API/assessmentsSlice';
@@ -9,6 +10,7 @@ import { fetchCourses } from '../../API/coursesSlice';
 import { WeeklyCalendar } from '../../components/WeeklyCalendar/WeeklyCalendar';
 import { GenericEvent } from '../../common/Types';
 
+// import { downloadICS } from './export-funcs';
 const { Text } = Typography;
 
 export default function Timetable() {
@@ -16,6 +18,7 @@ export default function Timetable() {
   const assessments = useAppSelector((state) => state.assessments);
   const session = useAppSelector((state) => state.session.session);
   const dispatch = useAppDispatch();
+  const [ courseFilter, setCourseFilter ] = useState<number[]>([]);
 
   useEffect(() => {
     if (session) {
@@ -34,7 +37,7 @@ export default function Timetable() {
         backgroundColor: 'red' // TODO: Get colour from course table
       }))
     : []
-  ), [assessments]);
+  ), [assessments, courseFilter]);
 
   const options: SelectProps['options'] = useMemo(() => (
     courses.status === 'succeeded' ?
@@ -47,21 +50,35 @@ export default function Timetable() {
    : []
   ), [courses]);
 
+  useEffect(() => {
+    setCourseFilter(courses.courses.map((course) => course.id));
+  }, [courses.courses]);
+    
   return (
     <Flex vertical gap='large'>
       <Flex vertical gap='small'>
         <Text strong>
           Courses
         </Text>
-        <Select
-          mode="multiple"
-          allowClear
-          style={{ width: '100%' }}
-          placeholder='Select courses'
-          defaultValue={[]}
-          onChange={() => {}}
-          options={options}
-        />
+          <Flex gap="large">
+            <Select
+              mode="multiple"
+              allowClear
+              style={{ width: '100%' }}
+              placeholder='Select courses'
+              value={courseFilter}
+              onChange={(values) => {setCourseFilter(values)}}
+              options={options}
+            />
+
+            <Button 
+            type="primary" 
+            icon={<DownloadOutlined />} 
+            size={"large"}
+          >
+            Download .ics file
+          </Button>
+        </Flex>
       </Flex>
       <WeeklyCalendar 
         events={events}
@@ -69,6 +86,8 @@ export default function Timetable() {
         onSelectDate={(date) => console.log(date)}
         weekends={false}
       />
+      
     </Flex>
+    
   );
 }
