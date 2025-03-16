@@ -26,7 +26,7 @@ export default function CoursesModal(
     }
 
     const handleModalCancelAlt = () => {
-      console.log("Its handlin time")
+      console.log("Fi Fo Fum")
       setCourseModalControl({ open: false });
     }
 
