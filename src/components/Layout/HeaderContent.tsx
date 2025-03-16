@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   Flex, 
   Typography, 
@@ -19,39 +20,40 @@ const { Text, Link } = Typography;
 
 type MenuItem = Required<MenuProps>['items'][number];
 
-const items: MenuItem[] = [
-  {
-    key: 1, 
-    label: (
-      <Link href="/" rel="noopener noreferrer">
-        Dashboard
-      </Link>
-    )
-  },
-  { 
-    key: 2, 
-    label: (
-      <Link href="/courses" rel="noopener noreferrer">
-        Courses
-      </Link>
-    ) 
-  },
-  { 
-    key: 3, 
-    label: (
-      <Link href="/timetable" rel="noopener noreferrer">
-        Timetable
-      </Link>
-    )
-  }
-];
-
 export default function HeaderContent() {
   const session = useAppSelector(( state : any ) => state.session.session)
   const [selectedKey, setSelectedKey] = useState<number>(
     Number(localStorage.getItem('selectedKey')) || 1
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const items: MenuItem[] = [
+    {
+      key: 1, 
+      label: (
+        <Link href='/' onClick={() => navigate('/')}>
+          Dashboard
+        </Link>
+      )
+    },
+    { 
+      key: 2, 
+      label: (
+        <Link href="/courses" onClick={() => navigate('/courses')}>
+          Courses
+        </Link>
+      ) 
+    },
+    { 
+      key: 3, 
+      label: (
+        <Link href="/timetable" onClick={() => navigate('/timetable')}>
+          Timetable
+        </Link>
+      )
+    }
+  ];
 
   useEffect(() => {
     localStorage.setItem('selectedKey', selectedKey.toString())
@@ -89,9 +91,11 @@ export default function HeaderContent() {
         }} 
         href="/" 
         rel="noopener noreferrer" 
-        onClick={() => setSelectedKey(1)}
+        onClick={() => {
+          setSelectedKey(1);
+          navigate('/');
+        }}
         strong
-        
       >
         Unitrack.
       </Link>
