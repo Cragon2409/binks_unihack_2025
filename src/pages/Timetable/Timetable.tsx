@@ -44,7 +44,7 @@ export default function Timetable() {
       )
     : []
   ), [assessments, courseFilter]);
-
+    
   const options: SelectProps['options'] = useMemo(() => (
     courses.status === 'succeeded' ?
       courses.courses.map((course) => (
