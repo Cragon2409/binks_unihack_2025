@@ -70,6 +70,9 @@ export const lightTheme: ThemeConfig = {
       },
       Table: {
         footerBg: dawnSurface
+      },
+      Menu: {
+        itemBg: dawnBase
       }
     }
   }
@@ -105,6 +108,9 @@ export const darkTheme: ThemeConfig = {
         },
         Table: {
           footerBg: mainSurface
+        },
+        Menu: {
+          itemBg: mainBase
         }
       }
   }

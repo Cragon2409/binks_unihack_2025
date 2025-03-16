@@ -9,10 +9,7 @@ import Assessment from './Assessments';
 import { DeleteOutlined } from '@ant-design/icons';
 import { PlusOutlined } from '@ant-design/icons';
 
-
-
 const { Title } = Typography;
-
 
 export default function Courses() {
   const courses = useAppSelector(( state ) => state.courses.courses)
@@ -26,13 +23,10 @@ export default function Courses() {
     dispatch(fetchCourses((session as any)?.user.id));
   }, [session]);
 
-  // console.log("SESSION", session)
-  // console.log("COURSES", courses)
-
   const [isCourseInfoModalOpen, setIsCourseInfoModalOpen] = useState(false);
-  const [selectedCourse, setSelectedCourse] = useState<any>(null);
+  const [selectedCourse, setSelectedCourse] = useState<string | null>(null);
 
-  const showCourseInfoModal = ( course: any ) => {
+  const showCourseInfoModal = (course: string) => {
     setSelectedCourse(course);
     setIsCourseInfoModalOpen(true);
   };
@@ -108,21 +102,18 @@ export default function Courses() {
           setCourseModalControl={setCourseModalControl}
           />
         <Modal 
-          title={selectedCourse ? selectedCourse.name : "Course Information"}
+          title={selectedCourse || "Course Information"} 
           open={isCourseInfoModalOpen} 
           onOk={handleCourseInfoOk} 
           onCancel={handleCourseInfoCancel}
           width={"100%"}
           wrapClassName="course-info-modal"
-        >
-          <Assessment 
-            course={selectedCourse}
-            assessmentModalControl={assessmentModalControl}
-            setAssessmentModalControl={setAssessmentModalControl}
-          />
+          >
+            <p>Assessments</p>
+            <p>No assessments available for this course.</p>
+            <p>Grades</p> 
         </Modal>
       </div>
     </>
   )
 }
-
