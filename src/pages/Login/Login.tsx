@@ -6,6 +6,7 @@ import {
   Input,
   Typography,
   Divider,
+  Modal,
   message
 } from 'antd';
 
@@ -13,25 +14,30 @@ import { GithubOutlined, DiscordOutlined } from '@ant-design/icons';
 
 import { LoginProps } from '../../common/Types';
 
-const { Link } = Typography;
+const { Title, Link } = Typography;
 
 export default function Login({ supabase }: LoginProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [signInLoading, setSignInLoading] = useState(false);
+  const [signUpLoading, setSignUpLoading] = useState(false);
+  const [passwordResetLoading, setPasswordResetLoading] = useState(false);
+  const [socialLoading, setSocialLoading] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Email sign in 
   const handleEmailSignIn = async () => {
-    setLoading(true);
+    setSignInLoading(true);
 
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
 
-    setLoading(false);
+    setSignInLoading(false);
+    
     if (error) {
       showError(error.message);
     } 
@@ -39,43 +45,49 @@ export default function Login({ supabase }: LoginProps) {
 
   // Email sign up
   const handleEmailSignUp = async () => {
-    setLoading(true);
+    setSignUpLoading(true);
 
     const { error } = await supabase.auth.signUp({
       email,
       password,
     });
 
-    setLoading(false);
+    setSignUpLoading(false);
+
     if (error) {
       showError(error.message);
     } 
+    else {
+      showSuccess('Confirmation email sent');
+    }
   };
 
   // Email password reset
   const handleEmailPasswordReset = async () => {
-    setLoading(true);
+    setPasswordResetLoading(true);
 
     const { error } = await supabase.auth.resetPasswordForEmail(email);
 
-    setLoading(false);
+    setPasswordResetLoading(false);
+
     if (error) {
       showError(error.message);
     }
     else {
-      showPasswordReset();
+      showSuccess('Password reset link sent to email address');
     }
   }
 
   // OAuth sign in (GitHub and Discord)
   const handleOAuthSignIn = async (provider: 'github' | 'discord') => {
-    setLoading(true);
+    setSocialLoading(true);
 
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
     });
 
-    setLoading(false);
+    setSocialLoading(false);
+
     if (error) {
       showError(error.message);
     }
@@ -88,25 +100,28 @@ export default function Login({ supabase }: LoginProps) {
     })
   }
 
-  const showPasswordReset = () => {
+  const showSuccess = (message: string) => {
     messageApi.open({
       type: 'success',
-      content: 'Password reset link sent to email address'
+      content: message
     })
   }
 
   return (
-    <Flex vertical gap="smanonell">
+    <Flex vertical gap="small">
+      <Title>Unitrack</Title>
       <Flex vertical gap="large">
         <Button
           onClick={() => handleOAuthSignIn('discord')}
           icon={<DiscordOutlined />}
+          loading={socialLoading}
         >
           Sign in with Discord
         </Button>
         <Button
           onClick={() => handleOAuthSignIn('github')}
           icon={<GithubOutlined />}
+          loading={socialLoading}
         >
           Sign in with Github
         </Button>
@@ -124,30 +139,52 @@ export default function Login({ supabase }: LoginProps) {
           visibilityToggle={{ visible: passwordVisible, onVisibleChange: setPasswordVisible }}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <Button
-          type="primary"
-          onClick={() => handleEmailSignIn()}
-          loading={loading}
-        >
-          Sign In
-        </Button>
+        <Flex gap="large">
+          <Button
+            style={{width: "100%"}}
+            type="primary"
+            onClick={() => handleEmailSignIn()}
+            loading={signInLoading}
+          >
+            Sign in
+          </Button>
+          <Button
+            style={{width: "100%"}}
+            onClick={() => handleEmailSignUp()}
+            loading={signUpLoading}
+          >
+            Sign up
+          </Button>
+        </Flex>
       </Flex>
 
-      
-      <Flex vertical gap="small">
-        <Link 
-          onClick={handleEmailPasswordReset}
-          disabled={loading}
+      <Link 
+          onClick={() => setIsModalOpen(true)}
         >
           Forgot your password?
         </Link>
-        <Link 
-          onClick={handleEmailSignUp}
-          disabled={loading}
-        >
-          Don't have an account? Sign up
-        </Link>
-      </Flex>
+
+      <Modal 
+        title="Reset password" 
+        open={isModalOpen} 
+        onOk={handleEmailPasswordReset} 
+        onCancel={() => setIsModalOpen(false)}
+        footer={[
+          <Button 
+            key="submit" 
+            type="primary" 
+            onClick={handleEmailPasswordReset}
+            loading={passwordResetLoading}
+          >
+            Reset password
+          </Button>,
+        ]}
+      >
+        <Input
+          placeholder="Email"
+          onChange={(e) => setEmail(e.target.value)}
+        />
+      </Modal>
 
       {contextHolder}
     </Flex>
