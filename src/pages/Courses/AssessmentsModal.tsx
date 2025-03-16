@@ -62,6 +62,7 @@ export default function AssessmentsModal(
         setGrade(0)
         setComplete(false)
     }
+
     return (
     <>
       <Modal title="Add an Assessment" 
