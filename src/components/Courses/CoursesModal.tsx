@@ -1,9 +1,11 @@
-import { Modal, Input, ColorPicker } from 'antd';
+import { Space, Modal, Input, ColorPicker, Typography } from 'antd';
 import { useAppDispatch, useAppSelector } from '../../API/hooks'
 import { createCourse } from '../../API/coursesSlice'
 import { useState } from 'react'
 import type { ColorPickerProps, GetProp } from 'antd';
 type Color = Extract<GetProp<ColorPickerProps, 'value'>, string | { cleared: any }>;
+
+const { Text } = Typography;
 
 interface CourseModalProps {
     courseModalControl: any
@@ -26,23 +28,24 @@ export default function CoursesModal(
     }
 
     return (
-    <>
-      <Modal title="Add a Course" 
-            open={courseModalControl.open} 
-            onOk={handleModalSubmit} 
-            onCancel={handleModalSubmit}>
-        <Input
+    <Modal title="Add a Course" 
+      open={courseModalControl.open} 
+      onOk={handleModalSubmit} 
+      onCancel={handleModalSubmit}
+    >
+        <Space direction='vertical'>
+          <Input
             placeholder="Enter course name"
             value={text}
             onChange={(e) => setText(e.target.value)}
-        />
-        <ColorPicker
+          />
+          <ColorPicker
             value={color}
             onChange={(value) => setColor(value!.toHexString())}
-            style={{ width: '100%' }}
-          />
-      </Modal>
-    </>
+            showText={() => <Text>Course colour</Text>}
+          />       
+        </Space>      
+    </Modal>
   );
     
 }
