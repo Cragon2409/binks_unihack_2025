@@ -5,7 +5,6 @@ import { Routes, Route } from 'react-router-dom';
 import { supabase } from './API/supabase';
 
 import AppLayout from './components/Layout/AppLayout'
-// import LoginLayout from './components/Layout/LoginLayout'
 import ThemeProvider from './components/ThemeProvider/ThemeProvider'
 import Dashboard from './pages/Dashboard/Dashboard';
 import Courses from './pages/Courses/Courses';
