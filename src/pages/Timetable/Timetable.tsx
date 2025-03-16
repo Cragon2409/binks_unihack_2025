@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
-import { Flex, Select, Typography } from 'antd';
+import { Flex, Select, Typography, Button } from 'antd';
 import type { SelectProps } from 'antd';
+import { DownloadOutlined } from '@ant-design/icons';
 
 import { useAppSelector, useAppDispatch } from '../../API/hooks';
 import { fetchAssessments } from '../../API/assessmentsSlice';
@@ -10,6 +11,7 @@ import { WeeklyCalendar } from '../../components/WeeklyCalendar/WeeklyCalendar';
 import { GenericEvent } from '../../common/Types';
 import { addHours } from 'date-fns';
 
+import { downloadICS } from './export-funcs';
 const { Text } = Typography;
 
 export default function Timetable() {
@@ -66,15 +68,29 @@ export default function Timetable() {
         <Text strong>
           Courses
         </Text>
-        <Select
-          mode="multiple"
-          allowClear
-          style={{ width: '100%' }}
-          placeholder='Select courses'
-          value={courseFilter}
-          onChange={(values) => {setCourseFilter(values)}}
-          options={options}
-        />
+          <Flex gap="large">
+            <Select
+              mode="multiple"
+              allowClear
+              style={{ width: '100%' }}
+              placeholder='Select courses'
+              value={courseFilter}
+              onChange={(values) => {setCourseFilter(values)}}
+              options={options}
+            />
+
+            <Button 
+            type="primary" 
+            icon={<DownloadOutlined />} 
+            size={"large"}
+            onClick={() => downloadICS(
+              assessments.assessments.filter((assessment) => courseFilter.includes(assessment.course_id)),
+              courses.courses
+            )}
+          >
+            Download .ics file
+          </Button>
+        </Flex>
       </Flex>
       <WeeklyCalendar 
         events={events}
@@ -82,6 +98,8 @@ export default function Timetable() {
         onSelectDate={(date) => console.log(date)}
         weekends={false}
       />
+      
     </Flex>
+    
   );
 }
