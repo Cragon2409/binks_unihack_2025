@@ -30,10 +30,10 @@ export default function TimetablePage() {
   const events: GenericEvent[] = useMemo(() => (
     assessments.status === 'succeeded' ?  
       assessments.assessments.map((assessment) => ({
-        eventId: assessment.id,
+        eventId: assessment.id.toString(),
         startTime: new Date(2025, 2, 12, 12, 0, 0), 
         endTime: new Date(2025, 2, 12, 14, 30, 0), 
-        title: assessment.title, 
+        title: assessment.name, 
         backgroundColor: 'red' // TODO: Get colour from course table
       }))
     : []

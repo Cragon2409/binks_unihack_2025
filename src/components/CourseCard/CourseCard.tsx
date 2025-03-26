@@ -48,7 +48,7 @@ const CourseCard = ({ course } : CourseCardProps) => {
             width: 20,
             height: 20,
             borderRadius: 5,
-            backgroundColor: course.colourCode
+            backgroundColor: course.colour
           }}
         />
       }

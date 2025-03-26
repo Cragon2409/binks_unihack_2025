@@ -79,11 +79,11 @@ export default function DashboardPage() {
   const currentDate = new Date().toISOString();
 
   var currentCourses : any = courses.filter((course) => {
-    return assessments.some((assessment) => assessment.course_id == course.id)
+    return assessments.some((assessment) => assessment.courseId == course.id)
   })
   var filteredCourses : any = selectedCourses.filter((selCourse) => selCourse.visible)
   var filteredAssesments : any = assessments.filter((assessment) => {
-    return filteredCourses.some((course : any) => course.id == assessment.course_id)
+    return filteredCourses.some((course : any) => course.id == assessment.courseId)
   })
   var countdownDays = getLatestDay(filteredAssesments)
   var assessmentProgress = getAssessmentProgress(filteredAssesments)
@@ -106,7 +106,7 @@ export default function DashboardPage() {
     countdownDays = getLatestDay(filteredAssesments)
     assessmentProgress = getAssessmentProgress(filteredAssesments)
     currentCourses = courses.filter((course) => {
-      return assessments?.some((assessment) => assessment.course_id == course.id)
+      return assessments?.some((assessment) => assessment.courseId == course.id)
     })
 
     var tempSelectedCourses : SelectedCourse[] = [];
@@ -123,13 +123,13 @@ export default function DashboardPage() {
     
     filteredCourses = selectedCourses.filter((selCourse) => selCourse.visible)
     filteredAssesments = assessments.filter((assessment) => {
-      return filteredCourses.some((course : any) => course.courseId == assessment.course_id)
+      return filteredCourses.some((course : any) => course.courseId == assessment.courseId)
     })
   }, [assessments])
 
   filteredCourses = selectedCourses.filter((selCourse) => selCourse.visible)
   filteredAssesments = assessments.filter((assessment) => {
-    return filteredCourses.some((course : any) => course.courseId == assessment.course_id)
+    return filteredCourses.some((course : any) => course.courseId == assessment.courseId)
   })
 
   countdownDays = getLatestDay(filteredAssesments)
@@ -225,7 +225,7 @@ export default function DashboardPage() {
               dataSource={courses}
               renderItem={(course) => {
                   return (
-                    <List.Item style={{backgroundColor : course.colourCode}}>
+                    <List.Item style={{backgroundColor : course.colour}}>
                       {course.name}
                     </List.Item>
                   )

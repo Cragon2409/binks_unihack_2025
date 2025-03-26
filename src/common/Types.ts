@@ -1,10 +1,24 @@
 
 import { SupabaseClient } from "@supabase/supabase-js"
 
+export interface Assessment {
+  id: number;
+  userId: number;
+  courseId: number;
+  name: string;
+  createdAt: string;
+  dueDate: string;
+  completeDate: string;
+  weight: number;
+  goalMark: number;
+  mark: number;
+  complete: boolean;
+}
+
 export interface Course {
   id: number;
   createdAt: string;
-  colourCode: string;
+  colour: string;
   userId: number;
   name: string
 }

@@ -1,9 +1,15 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { 
+  createSlice, 
+  createAsyncThunk, 
+  PayloadAction 
+} from '@reduxjs/toolkit';
 import { supabase } from './supabase';
+
+import { Assessment } from '../common/Types';
 
 // Define a type for the slice state
 export interface AssessmentsState {
-  assessments: Array<any>,
+  assessments: Array<Assessment>,
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
 }
