@@ -6,7 +6,10 @@ import {
   Typography
 } from 'antd';
 
-import { DeleteOutlined } from '@ant-design/icons';
+import { 
+  DeleteOutlined, 
+  EditOutlined 
+} from '@ant-design/icons';
 
 import { Course } from '../../common/Types';
 
@@ -22,6 +25,7 @@ interface CourseCardProps {
 
 const CourseCard = ({ course } : CourseCardProps) => {
   const navigate = useNavigate();
+   
 
   const handleCourseClick = () => {
     navigate(`/courses/${course.id}`);
@@ -55,6 +59,7 @@ const CourseCard = ({ course } : CourseCardProps) => {
       hoverable
       onClick={handleCourseClick}
       actions={[
+        <EditOutlined onClick={() => {}} />,
         <DeleteOutlined onClick={() => {}} />
       ]}
     >

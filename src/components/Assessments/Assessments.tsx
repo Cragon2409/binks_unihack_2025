@@ -19,7 +19,7 @@ export default function Assessments(
   const assessments = useAppSelector(( state ) => state.assessments.assessments)
   const session = useAppSelector(( state ) => state.session.session)
   const dispatch = useAppDispatch();
-  const relevantAssessments = assessments.filter(assessment => assessment.course_id == course.id)
+  const relevantAssessments = assessments.filter(assessment => assessment.courseId == course.id)
 
 
   useEffect(() => {
@@ -46,10 +46,10 @@ export default function Assessments(
         hoverable
       >
         <Flex vertical gap='small'>
-          <Text>{`Due date: ${assessment.due_date !== null ? new Date(assessment.due_date).toDateString() : ""}`}</Text>
-          <Text>{`Completed date: ${assessment.complete_date !== null ? new Date(assessment.complete_date).toDateString() : ""}`}</Text>
+          <Text>{`Due date: ${assessment.dueDate !== null ? new Date(assessment.dueDate).toDateString() : ""}`}</Text>
+          <Text>{`Completed date: ${assessment.completeDate !== null ? new Date(assessment.completeDate).toDateString() : ""}`}</Text>
           <Text>{`Weight: ${assessment.weight}`}</Text>
-          <Text>{`Target marks: ${assessment.goal_mark}`}</Text>
+          <Text>{`Target marks: ${assessment.goalMark}`}</Text>
           <Text>{`Marks: ${assessment.mark}`}</Text>
           <Text>{`Completed?: ${assessment.complete ? "Yes" : "No"}`}</Text>
           <Flex gap='small'>
