@@ -1,6 +1,14 @@
 
 import { SupabaseClient } from "@supabase/supabase-js"
 
+export interface Course {
+  id: number;
+  createdAt: string;
+  colourCode: string;
+  userId: number;
+  name: string
+}
+
 export interface LoginProps {
   supabase: SupabaseClient
 }

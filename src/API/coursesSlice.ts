@@ -1,10 +1,17 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import type { RootState } from './store'
+import { 
+  createSlice, 
+  createAsyncThunk, 
+  PayloadAction 
+} from '@reduxjs/toolkit';
+
 import { supabase } from './supabase';
+import { Course } from '../common/Types';
+
+import type { RootState } from './store'
 
 // Define a type for the slice state
 export interface CoursesState {
-  courses: Array<any>,
+  courses: Array<Course>,
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
 }

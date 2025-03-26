@@ -225,7 +225,7 @@ export default function DashboardPage() {
               dataSource={courses}
               renderItem={(course) => {
                   return (
-                    <List.Item style={{backgroundColor : course.colour_code}}>
+                    <List.Item style={{backgroundColor : course.colourCode}}>
                       {course.name}
                     </List.Item>
                   )
