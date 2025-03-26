@@ -14,6 +14,13 @@ import { Course } from '../../common/Types';
 
 const { Title } = Typography;
 
+/*
+TODO This page requires a lot of work:
+- Create a new Course slice for a single course
+- Retrieve assessments
+- Show loading skeletons
+*/
+
 const CoursePage = () => {
   // Extract courseId from the URL
   const { courseId } = useParams(); 
@@ -23,7 +30,9 @@ const CoursePage = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(fetchCourses((session as any)?.user.id));
+    if (session) {
+      dispatch(fetchCourses(session.user.id));
+    }
   }, [session]);
 
   useEffect(() => {

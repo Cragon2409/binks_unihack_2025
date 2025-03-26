@@ -22,7 +22,9 @@ export default function CoursesPage() {
   const [isCreateCourseDrawerOpen, setIsCreateCourseDrawerOpen] = useState<boolean>(false);
   
   useEffect(() => {
-    dispatch(fetchCourses((session as any)?.user.id));
+    if (session) {
+      dispatch(fetchCourses(session.user.id));
+    }
   }, [session]);
 
   const getCourseCards = () => {

@@ -44,7 +44,7 @@ function App() {
 
   useEffect(() => {
     if (session != null) {
-      dispatch(fetchCourses((session as any)?.user.id));
+      dispatch(fetchCourses(session?.user.id));
 
       // setLoading(false);
     }
