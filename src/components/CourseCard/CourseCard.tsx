@@ -1,3 +1,5 @@
+import { useNavigate } from 'react-router-dom';
+
 import {
   Flex,
   Card,
@@ -16,12 +18,13 @@ interface CourseCardProps {
 //   dispatch(deleteCourse(courseId))
 // }
 
-// const showCourseInfoModal = ( course: any ) => {
-//   setSelectedCourse(course);
-//   setIsCourseInfoModalOpen(true);
-// };
-
 const CourseCard = ({ course } : CourseCardProps) => {
+  const navigate = useNavigate();
+
+  const handleCourseClick = () => {
+    navigate(`/courses/${course.id}`);
+  }
+
   return (
     <Card 
       style={{ 
@@ -48,7 +51,7 @@ const CourseCard = ({ course } : CourseCardProps) => {
         />
       }
       hoverable
-      onClick={() => {}}
+      onClick={handleCourseClick}
       actions={[
         <DeleteOutlined onClick={() => {}} />
       ]}
