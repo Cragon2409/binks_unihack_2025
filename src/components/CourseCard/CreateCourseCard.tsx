@@ -1,14 +1,14 @@
 import {
-  Flex,
   Card,
 } from 'antd';
 
 import { PlusOutlined } from '@ant-design/icons';
 
 interface AddCourseCardProps {
+  setIsCreateCourseDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const AddCourseCard = ({ } : AddCourseCardProps) => {
+const CreateCourseCard = ({ setIsCreateCourseDrawerOpen } : AddCourseCardProps) => {
   return (
     <Card 
       style={{ 
@@ -25,11 +25,11 @@ const AddCourseCard = ({ } : AddCourseCardProps) => {
         }
       }}
       hoverable
-      onClick={() => {}}
+      onClick={() => setIsCreateCourseDrawerOpen(true)}
     >
       <PlusOutlined />
     </Card>
   )
 }
 
-export default AddCourseCard
+export default CreateCourseCard

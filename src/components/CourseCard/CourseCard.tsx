@@ -12,6 +12,15 @@ interface CourseCardProps {
   course: any;
 }
 
+// const handleCourseDelete = (courseId: number) => {
+//   dispatch(deleteCourse(courseId))
+// }
+
+// const showCourseInfoModal = ( course: any ) => {
+//   setSelectedCourse(course);
+//   setIsCourseInfoModalOpen(true);
+// };
+
 const CourseCard = ({ course } : CourseCardProps) => {
   return (
     <Card 
