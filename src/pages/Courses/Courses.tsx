@@ -1,16 +1,18 @@
 
 import { Typography, Flex, Modal, Card } from 'antd';
-import { DeleteOutlined } from '@ant-design/icons';
-import { PlusOutlined } from '@ant-design/icons';
 
 import { useAppDispatch, useAppSelector } from '../../API/hooks'
 import { deleteCourse, fetchCourses } from '../../API/coursesSlice'
 import { useEffect, useState } from 'react'
 import CoursesModal from '../../components/Courses/CoursesModal';
 import Assessment from '../../components/Assessments/Assessments';
+
+import CourseCard from '../../components/CourseCard/CourseCard';
+import AddCourseCard from '../../components/CourseCard/AddCourseCard';
+
 import * as Constants from '../../common/Constants'
 
-const { Title, Text } = Typography;
+const { Title } = Typography;
 
 export default function Courses() {
   const courses = useAppSelector(( state ) => state.courses.courses)
@@ -47,43 +49,9 @@ export default function Courses() {
 
   const getCourseCards = () => {
     let cards = courses.map((course, index) => (
-      <Card 
-        key={index} 
-        style={{ 
-          minWidth: 250,
-          height: 150,
-        }}
-        hoverable
-        onClick={() => showCourseInfoModal(course)}
-        actions={[
-          <DeleteOutlined style={{ fontSize: "20px" }} key="delete" onClick={(e) => { e.stopPropagation(); handleCourseDelete(course.id); }} />
-        ]}
-      >
-        <Card.Meta
-          title={<Text style={{color: course.colour_code}}>{course.name}</Text>}
-        />
-      </Card>
+      <CourseCard key={index} course={course} />
     ))
-    const createCardButton = (
-      <Card 
-        style={{ 
-          minWidth: 250,
-          height: 150,
-          alignItems: 'center',
-          textAlign: 'center'
-        }}
-        hoverable
-        onClick={() => setCourseModalControl({open: true})}
-        actions={[
-          <PlusOutlined style={{ fontSize: "20px" }} />
-        ]}
-      >
-        <Card.Meta
-          title='Add course'
-        />
-      </Card>
-    )
-    cards.push(createCardButton)
+    cards.push(<AddCourseCard />)
     return cards
   }
   
