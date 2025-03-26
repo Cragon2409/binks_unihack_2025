@@ -13,7 +13,7 @@ import { GenericEvent } from '../../common/Types';
 // import { downloadICS } from './export-funcs';
 const { Text } = Typography;
 
-export default function Timetable() {
+export default function TimetablePage() {
   const courses = useAppSelector((state) => state.courses);
   const assessments = useAppSelector((state) => state.assessments);
   const session = useAppSelector((state) => state.session.session);

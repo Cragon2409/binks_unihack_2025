@@ -63,7 +63,7 @@ type SelectedCourse = {
   colour : string
 }
 
-export default function Dashboard() {
+export default function DashboardPage() {
   const session = useAppSelector(( state ) => state.session.session)
   const assessments = useAppSelector(( state) => state.assessments.assessments);
   const courses = useAppSelector(( state) => state.courses.courses);
