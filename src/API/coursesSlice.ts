@@ -27,7 +27,7 @@ const getCourses = async (id: any): Promise<any> => {
   const {data, error} = await supabase
     .from('courses')
     .select()
-    .eq('user_id', id);
+    .eq('userId', id);
   if (error) {
     throw new Error(error.message);
   }
@@ -91,7 +91,7 @@ export const coursesSlice = createSlice({
       .addCase(fetchCourses.pending, state => {
         state.status = 'loading';
       })
-      .addCase(fetchCourses.fulfilled, (state, action: PayloadAction<any[]>) => {
+      .addCase(fetchCourses.fulfilled, (state, action: PayloadAction<Course[]>) => {
         state.status = 'succeeded';
         state.courses = action.payload;
       })
@@ -102,7 +102,7 @@ export const coursesSlice = createSlice({
       .addCase(createCourse.pending, (state) => {
         state.status = 'loading';
       })
-      .addCase(createCourse.fulfilled, (state, action: PayloadAction<any>) => {
+      .addCase(createCourse.fulfilled, (state, action: PayloadAction<Course>) => {
         state.status = 'succeeded';
         state.courses.push(action.payload);
       })
@@ -126,7 +126,6 @@ export const coursesSlice = createSlice({
 
 export const {  } = coursesSlice.actions
 
-export const selectCourse = (state: RootState) => state.courses.courses
 export const selectCourses = (state: RootState) => state.courses.courses;
 export const selectCoursesStatus = (state: RootState) => state.courses.status;
 export const selectCoursesError = (state: RootState) => state.courses.error;

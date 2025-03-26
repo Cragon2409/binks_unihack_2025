@@ -3,6 +3,7 @@ import { fetchAssessments } from '../../API/assessmentsSlice';
 import { fetchCourses } from '../../API/coursesSlice'
 import { useAppDispatch, useAppSelector } from '../../API/hooks'
 import { useEffect, useState } from 'react'
+import { Assessment } from '../../common/Types';
 
 const { Title } = Typography;
 const WEEKDAYS = [
@@ -23,7 +24,7 @@ function getFormatFromISO(isoDate : string) {
 
 function getItemCourse(item : any, courses : any) {
   for (var course of courses) {
-    if (item.course_id == course.id) {
+    if (item.courseId == course.id) {
       return course;
     }
   }
@@ -32,13 +33,13 @@ function getItemCourse(item : any, courses : any) {
 
 function getLatestDay(assessments : any) {
   const currentDate = new Date().toISOString();
-  const incompleteAssessments = assessments.filter((item : any) => item.complete == false && item.due_date.localeCompare(currentDate)); //filter out past and completed assessments
+  const incompleteAssessments = assessments.filter((item : any) => item.complete == false && item.dueDate.localeCompare(currentDate)); //filter out past and completed assessments
 
   if (incompleteAssessments.length === 0) {
     return 0;
   }
 
-  const latestItem = new Date(incompleteAssessments.reduce((latest : any, current : any) => latest.due_date.localeCompare(current.due_date) ? latest : current ).due_date)
+  const latestItem = new Date(incompleteAssessments.reduce((latest : Assessment, current : Assessment) => latest.dueDate.localeCompare(current.dueDate) ? latest : current ).dueDate)
 
   const timeDifference = latestItem.getTime() - (new Date()).getTime()
 
@@ -87,8 +88,8 @@ export default function DashboardPage() {
   })
   var countdownDays = getLatestDay(filteredAssesments)
   var assessmentProgress = getAssessmentProgress(filteredAssesments)
-  var jarJarHappy = filteredAssesments.filter((ass : any) => (
-    (ass.complete_date ?? "ZZZZZ").localeCompare(ass.due_date ?? "") && !(ass.complete_date == null && (ass.due_date.localeCompare(currentDate)))
+  var jarJarHappy = filteredAssesments.filter((ass : Assessment) => (
+    (ass.completeDate ?? "ZZZZZ").localeCompare(ass.dueDate ?? "") && !(ass.completeDate == null && (ass.dueDate.localeCompare(currentDate)))
   )).length <= (filteredAssesments.length / 2)  
 
 
@@ -134,8 +135,8 @@ export default function DashboardPage() {
 
   countdownDays = getLatestDay(filteredAssesments)
   assessmentProgress = getAssessmentProgress(filteredAssesments)
-  jarJarHappy = filteredAssesments.filter((ass : any) => (
-      (ass.complete_date ?? "ZZZZZ").localeCompare(ass.due_date ?? "") && !(ass.complete_date == null && (ass.due_date.localeCompare(currentDate)))
+  jarJarHappy = filteredAssesments.filter((ass : Assessment) => (
+      (ass.completeDate ?? "ZZZZZ").localeCompare(ass.dueDate ?? "") && !(ass.completeDate == null && (ass.dueDate.localeCompare(currentDate)))
     )).length <= (filteredAssesments.length / 2) 
 
 
@@ -166,7 +167,7 @@ export default function DashboardPage() {
           style={{backgroundColor : token.colorBgBase, overflow: "auto", height:"30vh"}}
           header={<div><Typography.Link href="/timetable" rel="noopener noreferrer">Upcoming Assessments</Typography.Link></div>}
           bordered
-          dataSource={filteredAssesments.filter((item : any)=> item.due_date.localeCompare(currentDate))}
+          dataSource={filteredAssesments.filter((item : Assessment)=> item.dueDate.localeCompare(currentDate))}
           renderItem={(item : any) => {
               const course = getItemCourse(item, courses)
               return (
@@ -183,7 +184,7 @@ export default function DashboardPage() {
                       </Typography.Text> 
                     </Col>
                     <Col span={8}>
-                      <Typography.Text>{getFormatFromISO(item.due_date)}</Typography.Text>
+                      <Typography.Text>{getFormatFromISO(item.dueDate)}</Typography.Text>
                     </Col>
                     <Col span={8}>
                     <Checkbox defaultChecked={(item.complete)} />
@@ -202,7 +203,7 @@ export default function DashboardPage() {
               style={{ height: "20vh", backgroundColor : token.colorBgBase, overflow: "auto"}}
               header={<div>Recent Marks</div>}
               bordered
-              dataSource={filteredAssesments.filter((item : any)=> item.due_date.localeCompare(currentDate) && item.complete).slice().reverse()}
+              dataSource={filteredAssesments.filter((item : Assessment)=> item.dueDate.localeCompare(currentDate) && item.complete).slice().reverse()}
               renderItem={(item : any) => {
                   const course = getItemCourse(item, courses)
                   return (

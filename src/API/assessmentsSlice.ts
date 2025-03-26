@@ -25,7 +25,7 @@ const getAssessments = async (id: any): Promise<any> => {
     const {data, error} = await supabase
       .from('assessments')
       .select()
-      .eq('user_id', id);
+      .eq('userId', id);
     if (error) {
       throw new Error(error.message);
     }
