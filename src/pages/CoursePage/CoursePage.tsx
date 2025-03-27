@@ -13,21 +13,17 @@ import { fetchAssessments } from '../../API/assessmentsSlice';
 
 import { Assessment, Course } from '../../common/Types';
 import AssessmentCard from '../../components/AssessmentCard/AssessmentCard';
+import CreateAssessmentCard from '../../components/AssessmentCard/CreateAssessmentCard';
+import CreateAssessmentDrawer from '../../components/drawers/CreateAssessmentDrawer';
 
 const { Title } = Typography;
-
-/*
-TODO This page requires a lot of work:
-- Create a new Course slice for a single course
-- Retrieve assessments
-- Show loading skeletons
-*/
 
 const CoursePage = () => {
   // Extract courseId from the URL
   const { courseId } = useParams(); 
   const [ course, setCourse ] = useState<Course | null>(null);
-  const [ courseAssessments, setCourseAssessments ] = useState<Assessment[]>([]); 
+  const [ courseAssessments, setCourseAssessments ] = useState<Assessment[]>([]);
+  const [ isCreateAssessmentDrawerOpen, setIsCreateAssessmentDrawerOpen ]= useState<boolean>(false);
   const courses = useAppSelector(( state ) => state.courses.courses);
   const assessments = useAppSelector(( state ) => state.assessments.assessments);
   const session = useAppSelector(( state ) => state.session.session);
@@ -49,33 +45,41 @@ const CoursePage = () => {
   }, [courses])
 
   useEffect(() => {
-    if (course) {
+    if (course) {      
       setCourseAssessments(assessments.filter((assessments) => assessments.courseId == course.id));
     }
   }, [course])
 
-  const getAssessmentCards = () => {
-    let cards = courseAssessments.map((assessment, index) =>(
+
+  const getCourseAssessmentCards = () => {
+    let courseAssessmentCards = courseAssessments.map((assessment, index) =>(
       <AssessmentCard key={index} assessment={assessment} />
     ))
-    // cards.push(createCardButton)
-    return cards
+    courseAssessmentCards.push(<CreateAssessmentCard key={courses.length} setIsCreateAssessmentDrawerOpen={setIsCreateAssessmentDrawerOpen} />)
+    return courseAssessmentCards;
   }
 
   return (
     <Flex vertical>
       {
-        course ? (
+        course && (
           <Flex vertical>
             <Title>{course.name}</Title>
             <Flex wrap gap="large">
-              {getAssessmentCards()}
+              {getCourseAssessmentCards()}
             </Flex>
           </Flex>
-        ) :
-        <Spin />
+        ) 
       }
-      
+      {
+        courseId && (
+          <CreateAssessmentDrawer 
+            courseId={Number(courseId)}
+            isOpen={isCreateAssessmentDrawerOpen} 
+            setIsOpen={setIsCreateAssessmentDrawerOpen} 
+          />
+        )
+      }
     </Flex>
   )
 }

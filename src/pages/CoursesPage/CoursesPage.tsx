@@ -10,7 +10,7 @@ import { fetchCourses } from '../../API/coursesSlice'
 
 import CourseCard from '../../components/CourseCard/CourseCard';
 import CreateCourseCard from '../../components/CourseCard/CreateCourseCard';
-import CreateCourseDrawer from '../../components/CreateCourseDrawer/CreateCourseDrawer';
+import CreateCourseDrawer from '../../components/drawers/CreateCourseDrawer';
 
 const { Title } = Typography;
 

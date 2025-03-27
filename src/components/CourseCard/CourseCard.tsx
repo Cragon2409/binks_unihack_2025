@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import {
   Flex,
   Card,
+  Button,
   Typography
 } from 'antd';
 
@@ -19,27 +20,29 @@ interface CourseCardProps {
   course: Course;
 }
 
-// const handleCourseDelete = (courseId: number) => {
-//   dispatch(deleteCourse(courseId))
-// }
-
 const CourseCard = ({ course } : CourseCardProps) => {
   const navigate = useNavigate();
    
-
   const handleCourseClick = () => {
     navigate(`/courses/${course.id}`);
   }
+
+  // const handleCourseDelete = (courseId: number) => {
+  //   dispatch(deleteCourse(courseId))
+  // }
 
   return (
     <Card 
       style={{ 
         minWidth: 250,
-        minHeight: 200
+        height: 200
       }}
       styles={{
         header: {
           borderBottom: 'none'
+        },
+        body: {
+          padding: '0 24px'
         },
         actions: {
           borderTop: 'none'
@@ -59,8 +62,17 @@ const CourseCard = ({ course } : CourseCardProps) => {
       hoverable
       onClick={handleCourseClick}
       actions={[
-        <EditOutlined onClick={() => {}} />,
-        <DeleteOutlined onClick={() => {}} />
+        <Button
+          type='text'
+          icon={<EditOutlined />}
+          onClick={() => {}} 
+        />,
+        <Button
+          danger
+          type='text'
+          icon={<DeleteOutlined />}
+          onClick={() => {}}
+        />
       ]}
     >
       <Flex vertical>

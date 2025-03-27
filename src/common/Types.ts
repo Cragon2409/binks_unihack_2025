@@ -10,7 +10,7 @@ export interface Assessment {
   dueDate: string;
   completeDate: string;
   weight: number;
-  goalMark: number;
+  desiredMark: number;
   mark: number;
   complete: boolean;
 }

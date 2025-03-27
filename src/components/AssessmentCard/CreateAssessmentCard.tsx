@@ -4,11 +4,11 @@ import {
 
 import { PlusOutlined } from '@ant-design/icons';
 
-interface CreateCourseCardProps {
-  setIsCreateCourseDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>;
+interface CreateAssessmentCardProps {
+  setIsCreateAssessmentDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const CreateCourseCard = ({ setIsCreateCourseDrawerOpen } : CreateCourseCardProps) => {
+const CreateAssessmentCard = ({ setIsCreateAssessmentDrawerOpen } : CreateAssessmentCardProps) => {
   return (
     <Card 
       style={{ 
@@ -25,11 +25,11 @@ const CreateCourseCard = ({ setIsCreateCourseDrawerOpen } : CreateCourseCardProp
         }
       }}
       hoverable
-      onClick={() => setIsCreateCourseDrawerOpen(true)}
+      onClick={() => setIsCreateAssessmentDrawerOpen(true)}
     >
       <PlusOutlined />
     </Card>
   )
 }
 
-export default CreateCourseCard
+export default CreateAssessmentCard
