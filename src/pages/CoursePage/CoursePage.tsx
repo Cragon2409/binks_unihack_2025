@@ -3,8 +3,7 @@ import { useParams } from 'react-router-dom';
 
 import {
   Flex,
-  Typography,
-  Spin
+  Typography
 } from 'antd';
 
 import { useAppDispatch, useAppSelector } from '../../API/hooks'
@@ -60,7 +59,12 @@ const CoursePage = () => {
   }
 
   return (
-    <Flex vertical>
+    <Flex
+      style={{
+        padding: 24
+      }} 
+      vertical
+    >
       {
         course && (
           <Flex vertical>

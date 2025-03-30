@@ -1,141 +1,60 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+
 import { 
-  Flex, 
+  Layout, 
+  Flex,
   Typography, 
-  Menu, 
   Button,
-  Modal
+  theme
 } from 'antd';
-import type { MenuProps } from 'antd';
+
 import { UserOutlined } from '@ant-design/icons';
 
-import { supabase } from '../../API/supabase';
+import ProfileDrawer from '../drawers/ProfileDrawer';
 
-import { useAppSelector } from '../../API/hooks';
-import * as Constants from '../../common/Constants'
-
-
-const { Text, Link } = Typography;
-
-type MenuItem = Required<MenuProps>['items'][number];
-
-const items: MenuItem[] = [
-  {
-    key: 1, 
-    label: (
-      <Link href="/" rel="noopener noreferrer">
-        Dashboard
-      </Link>
-    )
-  },
-  { 
-    key: 2, 
-    label: (
-      <Link href="/courses" rel="noopener noreferrer">
-        Courses
-      </Link>
-    ) 
-  },
-  { 
-    key: 3, 
-    label: (
-      <Link href="/timetable" rel="noopener noreferrer">
-        Timetable
-      </Link>
-    )
-  }
-];
+const { Header} = Layout;
+const { Text } = Typography;
 
 export default function HeaderContent() {
-  const session = useAppSelector(( state : any ) => state.session.session)
-  const [selectedKey, setSelectedKey] = useState<number>(
-    Number(localStorage.getItem('selectedKey')) || 1
-  );
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  useEffect(() => {
-    localStorage.setItem('selectedKey', selectedKey.toString())
-  }, [selectedKey]);
-
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
-
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
+  const { token: { colorBgContainer, colorBorder } } = theme.useToken();
+  
+  const [isProfileDrawerOpen, setIsProfileDrawerOpen] = useState(false);
 
   return (
-    <Flex 
+    <Header 
       style={{
-        maxWidth: Constants.maxWidth,
-        width: "100%",
-        margin: "0 auto",
-        padding: "12px"
+        position: 'sticky',
+        top: 0,
+        zIndex: 1000,
+        width: '100%',
+        height: 'fit-content',
+        display: 'flex', 
+        padding: '24px', 
+        background: colorBgContainer, 
+        borderBottom: `1px solid ${colorBorder}`,
       }} 
-      vertical={false} 
-      align="center" 
-      justify="space-between"
     >
-      <Link 
-        style={{ 
-          fontSize: "20px", 
-          lineHeight: "28px",
-          whiteSpace: 'nowrap'
-        }} 
-        href="/" 
-        rel="noopener noreferrer" 
-        onClick={() => setSelectedKey(1)}
-        strong
-        
-      >
-        Unitrack.
-      </Link>
-      <Flex 
-        style={{
-          width: "400px"
-        }}
-        gap="small" 
-        justify='flex-end' 
-        align='center'
-      >
-        <Menu
-          style={{
-            width: "70%"
-          }}
-          mode="horizontal"
-          items={items}
-          selectedKeys={[selectedKey.toString()]}
-          onClick={(e) => setSelectedKey(Number(e.key))}
-          disabledOverflow={false}
-        />
+      <Flex style={{ width: '100% '}}justify='space-between'>
+        <Flex gap='small' align='center'>
+          <img src="favicon.ico" alt="Unitrack Logo" width={32} height={32} />
+          <Text 
+            style={{ 
+              fontSize: "20px", 
+              lineHeight: "28px",
+              whiteSpace: 'nowrap'
+            }} 
+            strong        
+          >
+            Unitrack
+          </Text>
+        </Flex>
         <Button 
           icon={<UserOutlined />} 
-          onClick={showModal}
+          onClick={() => setIsProfileDrawerOpen(true)}
         />
       </Flex>
-      <Modal 
-        title="Profile" 
-        open={isModalOpen} 
-        onOk={handleOk} 
-        onCancel={handleCancel}
-        footer={[
-          <Button 
-            key="submit" 
-            type="primary" 
-            onClick={() => supabase.auth.signOut()}>
-            Logout
-          </Button>,
-        ]}
-      >
-        <Text>
-          {session ? `You are logged in with ${(session as any).user.email}` : ""}
-        </Text>
-      </Modal>
-    </Flex>
+
+      <ProfileDrawer isOpen={isProfileDrawerOpen} setIsOpen={setIsProfileDrawerOpen} />
+    </Header>
   );
 }

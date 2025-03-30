@@ -1,51 +1,45 @@
-import React from 'react';
 import { Outlet } from 'react-router-dom';
-import { Layout } from 'antd';
+
+import { 
+  Layout,
+} from 'antd';
 
 import HeaderContent from './HeaderContent';
 import FooterContent from './FooterContent';
-import * as Constants from '../../common/Constants';
+import VerticalNavigationBar from '../VerticalNavigationBar/VerticalNavigationBar';
 
-const { Header, Content, Footer } = Layout;
-
-const layoutStyle = {
-  minHeight: "100vh"
-};
-
-const headerStyle: React.CSSProperties = {
-  display: "flex",
-  position: "sticky",
-  top: 0,
-  zIndex: 1,
-  alignItems: "center",
-  padding: "12px"
-};
-
-const contentStyle: React.CSSProperties = {
-  maxWidth: Constants.maxWidth,
-  width: "100%",
-  textAlign: "left",
-  margin: "0 auto",
-  padding: "12px"
-};
-
-const footerStyle: React.CSSProperties = {
-  textAlign: "center",
-  padding: "12px"
-};
 
 export default function AppLayout() {
+
+  // useEffect(() => {
+  //   const handleResize = () => {
+  //     if (window.innerWidth <= 780) {
+  //       setAppLayoutState('mobile');
+  //     } 
+  //     else if (window.innerWidth <= 2000) {
+  //       setAppLayoutState('compact');
+  //     }
+  //     else {
+  //       setAppLayoutState('full');
+  //     }
+  //   };
+
+  //   window.addEventListener('resize', handleResize);
+  //   handleResize(); 
+
+  //   return () => window.removeEventListener('resize', handleResize);
+  // });
+
   return (
-    <Layout style={layoutStyle}>
-      <Header style={headerStyle}>
-        <HeaderContent/>
-      </Header>
-      <Content style={contentStyle}>
-        <Outlet/>
-      </Content>
-      <Footer style={footerStyle}>
-        <FooterContent/>
-      </Footer>
+    <Layout style={{ minHeight: '100vh' }}>
+      <HeaderContent />
+      <Layout>
+        <VerticalNavigationBar />
+        <Layout style={{ marginLeft: 75, padding: 0 }}>
+          <Outlet />
+        </Layout>        
+      </Layout>
+      <FooterContent />
     </Layout>
   );
 }

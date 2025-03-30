@@ -55,7 +55,13 @@ export default function TimetablePage() {
   }, [courses.courses]);
     
   return (
-    <Flex vertical gap='large'>
+    <Flex 
+      style={{
+        padding: 24
+      }}
+      vertical 
+      gap='large'
+    >
       <Flex vertical gap='small'>
         <Text strong>
           Courses

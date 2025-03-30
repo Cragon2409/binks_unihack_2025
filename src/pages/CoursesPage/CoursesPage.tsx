@@ -36,7 +36,12 @@ export default function CoursesPage() {
   }
   
   return (
-    <Flex vertical>
+    <Flex 
+      style={{
+        padding: 24
+      }}
+      vertical
+    >
       <Title>Courses</Title>
       <Flex wrap gap="large">
         {getCourseCards()}
