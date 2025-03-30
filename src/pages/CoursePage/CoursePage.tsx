@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 
 import {
   Flex,
+  Breadcrumb,
   Typography
 } from 'antd';
 
@@ -63,26 +64,31 @@ const CoursePage = () => {
         padding: 24
       }} 
       vertical
+      gap='large'
     >
+      <Breadcrumb
+        items={[
+          {
+            title: 'Courses',
+            href: '/courses'
+          },
+          {
+            title: course?.name,
+          }
+        ]}
+      />
       {
         course && (
-          <Flex vertical>
-            <Title>{course.name}</Title>
-            <Flex wrap gap="large">
-              {getCourseAssessmentCards()}
-            </Flex>
+          <Flex wrap gap="large">
+            {getCourseAssessmentCards()}
           </Flex>
         ) 
       }
-      {
-        courseId && (
-          <CreateAssessmentDrawer 
-            courseId={Number(courseId)}
-            isOpen={isCreateAssessmentDrawerOpen} 
-            setIsOpen={setIsCreateAssessmentDrawerOpen} 
-          />
-        )
-      }
+      <CreateAssessmentDrawer 
+        courseId={Number(courseId)}
+        isOpen={isCreateAssessmentDrawerOpen} 
+        setIsOpen={setIsCreateAssessmentDrawerOpen} 
+      />
     </Flex>
   )
 }

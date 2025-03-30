@@ -1,5 +1,11 @@
 import { useState, useEffect, useMemo } from 'react';
-import { Flex, Select, Typography, Button } from 'antd';
+
+import { 
+  Flex, 
+  Select, 
+  Breadcrumb, 
+  Button 
+} from 'antd';
 import type { SelectProps } from 'antd';
 import { DownloadOutlined } from '@ant-design/icons';
 
@@ -11,7 +17,6 @@ import { WeeklyCalendar } from '../../components/WeeklyCalendar/WeeklyCalendar';
 import { GenericEvent } from '../../common/Types';
 
 // import { downloadICS } from './export-funcs';
-const { Text } = Typography;
 
 export default function TimetablePage() {
   const courses = useAppSelector((state) => state.courses);
@@ -62,22 +67,26 @@ export default function TimetablePage() {
       vertical 
       gap='large'
     >
+      <Breadcrumb
+        items={[
+          {
+            title: 'Timetable',
+          }
+        ]}
+      />
       <Flex vertical gap='small'>
-        <Text strong>
-          Courses
-        </Text>
-          <Flex gap="large">
-            <Select
-              mode="multiple"
-              allowClear
-              style={{ width: '100%' }}
-              placeholder='Select courses'
-              value={courseFilter}
-              onChange={(values) => {setCourseFilter(values)}}
-              options={options}
-            />
+        <Flex gap="large">
+          <Select
+            mode="multiple"
+            allowClear
+            style={{ width: '100%' }}
+            placeholder='Select courses'
+            value={courseFilter}
+            onChange={(values) => {setCourseFilter(values)}}
+            options={options}
+          />
 
-            <Button 
+          <Button 
             type="primary" 
             icon={<DownloadOutlined />} 
             size={"large"}

@@ -1,11 +1,10 @@
-import { Typography, Checkbox, Flex, List, Card, Progress, Row, Col, theme } from 'antd';
+import { Breadcrumb, Typography, Checkbox, Flex, List, Card, Progress, Row, Col, theme } from 'antd';
 import { fetchAssessments } from '../../API/assessmentsSlice';
 import { fetchCourses } from '../../API/coursesSlice'
 import { useAppDispatch, useAppSelector } from '../../API/hooks'
 import { useEffect, useState } from 'react'
 import { Assessment } from '../../common/Types';
 
-const { Title } = Typography;
 const WEEKDAYS = [
   "Mon",
   "Tue",
@@ -142,7 +141,13 @@ export default function DashboardPage() {
 
   return (
     <main className="dashboard-page">
-      <Title>Dashboard</Title>
+      <Breadcrumb
+          items={[
+            {
+              title: 'Dashboard',
+            }
+          ]}
+        />
 
       <div className="main-content" style={{backgroundColor: token.colorBgContainer, borderColor : token.colorBorder}}>
         <div className="small" style={{marginBottom: "0px"}}>

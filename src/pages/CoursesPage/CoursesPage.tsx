@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import { 
-  Typography, 
+  Breadcrumb, 
   Flex
 } from 'antd';
 
@@ -11,8 +11,6 @@ import { fetchCourses } from '../../API/coursesSlice'
 import CourseCard from '../../components/CourseCard/CourseCard';
 import CreateCourseCard from '../../components/CourseCard/CreateCourseCard';
 import CreateCourseDrawer from '../../components/drawers/CreateCourseDrawer';
-
-const { Title } = Typography;
 
 export default function CoursesPage() {
   const courses = useAppSelector(( state ) => state.courses.courses)
@@ -41,8 +39,15 @@ export default function CoursesPage() {
         padding: 24
       }}
       vertical
+      gap='large'
     >
-      <Title>Courses</Title>
+      <Breadcrumb
+          items={[
+            {
+              title: 'Courses',
+            }
+          ]}
+        />
       <Flex wrap gap="large">
         {getCourseCards()}
       </Flex>
