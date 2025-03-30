@@ -23,9 +23,15 @@ const { Text } = Typography;
 
 interface AssessmentCardProps {
   assessment: Assessment;
+  setIsEditAssessmentDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setEditAssessment: React.Dispatch<React.SetStateAction<Assessment | null>>;
 }
 
-const AssessmentCard = ({ assessment } : AssessmentCardProps) => {
+const AssessmentCard = ({ 
+  assessment, 
+  setIsEditAssessmentDrawerOpen, 
+  setEditAssessment
+} : AssessmentCardProps) => {
   const dispatch = useAppDispatch();
   
   const today = new Date();
@@ -51,6 +57,7 @@ const AssessmentCard = ({ assessment } : AssessmentCardProps) => {
           borderBottom: 'none'
         },
         body: {
+          height: '85px',
           padding: '0 24px'
         },
         actions: {
@@ -66,7 +73,10 @@ const AssessmentCard = ({ assessment } : AssessmentCardProps) => {
         <Button
           type='text'
           icon={<EditOutlined />}
-          onClick={() => {}} 
+          onClick={() => {
+            setEditAssessment(assessment);
+            setIsEditAssessmentDrawerOpen(true);
+          }} 
         />,
         <Popconfirm
           title={`Delete ${assessment.name}`}

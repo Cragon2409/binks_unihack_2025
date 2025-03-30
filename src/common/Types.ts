@@ -8,10 +8,10 @@ export interface Assessment {
   name: string;
   createdAt: string;
   dueDate: string;
-  completeDate: string;
+  completeDate: string | null;
   weight: number;
   desiredMark: number;
-  mark: number;
+  mark: number | null;
   complete: boolean;
 }
 

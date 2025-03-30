@@ -13,48 +13,49 @@ import {
 import { AggregationColor } from 'antd/es/color-picker/color';
 
 import { useAppDispatch, useAppSelector } from '../../API/hooks'
-import { createCourse } from '../../API/coursesSlice';
+import { Course } from '../../common/Types';
 
 interface CreateCourseDrawerProps {
+  course?: Course 
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const CreateCourseDrawer = ({ isOpen, setIsOpen } : CreateCourseDrawerProps) => {
+const EditCourseDrawer = ({ course, isOpen, setIsOpen } : CreateCourseDrawerProps) => {
   const session = useAppSelector(( state ) => state.session.session)
   const dispatch = useAppDispatch();
 
   const [name, setName] = useState(''); 
   const [colour, setColour] = useState<AggregationColor>(new AggregationColor('#ffffff'));   
   
-  const handleCourseCreate = (courseId: number) => {
+  const handleCourseEdit = (courseId: number) => {
+    // dispatch(createCourse(courseId))
+
     if (session) {
-      const course = {
+      const updatedCourse = {
         userId: session.user.id,
         name: name,
         colour: colour.toHexString()
       }
-      dispatch(createCourse(course));
+      // dispatch(updateCourse(course.id, uupdatedCourse));
     }
   }
   
   return (
     <Drawer
-      title="Add a Course"
+      title={`Edit ${course?.name}`}
       open={isOpen} 
       onClose={() => setIsOpen(false)}
     >    
       <Form 
         layout="vertical" 
-        requiredMark
-        onFinish={(handleCourseCreate)}
+        onFinish={(handleCourseEdit)}
       >
         <Row gutter={16}>
           <Col span={24}>
             <Form.Item
               name="courseName"
               label="Course Name"
-              rules={[{ required: true, message: 'Please enter course name' }]}
             >
               <Input
                 style={{
@@ -72,7 +73,6 @@ const CreateCourseDrawer = ({ isOpen, setIsOpen } : CreateCourseDrawerProps) => 
             <Form.Item
               name="courseColour"
               label="Course Colour"
-              rules={[{ required: true, message: 'Please enter course colour' }]}
             >
               <ColorPicker
                 style={{
@@ -107,7 +107,7 @@ const CreateCourseDrawer = ({ isOpen, setIsOpen } : CreateCourseDrawerProps) => 
                 type="primary"
                 htmlType='submit'
               >
-                Create
+                Update
               </Button>
             </Form.Item>
           </Col>
@@ -117,4 +117,4 @@ const CreateCourseDrawer = ({ isOpen, setIsOpen } : CreateCourseDrawerProps) => 
   )
 }
 
-export default CreateCourseDrawer
+export default EditCourseDrawer

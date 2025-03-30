@@ -47,6 +47,7 @@ const CourseCard = ({ course } : CourseCardProps) => {
           borderBottom: 'none'
         },
         body: {
+          height: '85px',
           padding: '0 24px'
         },
         actions: {
@@ -76,7 +77,7 @@ const CourseCard = ({ course } : CourseCardProps) => {
           description='Are you sure you want to delete this course?'
           onConfirm={(e) => {
             e?.stopPropagation();
-            handleCourseDelete
+            handleCourseDelete();
           }}
           okText='Yes'
           cancelText='No'
@@ -89,13 +90,7 @@ const CourseCard = ({ course } : CourseCardProps) => {
           />
         </Popconfirm>
       ]}
-    >
-      <Flex vertical>
-        <Text>Course Code</Text>
-        <Text>Current Scoree</Text>
-        <Text>Desired Mark</Text>
-      </Flex>
-    </Card>
+    />
   )
 }
 

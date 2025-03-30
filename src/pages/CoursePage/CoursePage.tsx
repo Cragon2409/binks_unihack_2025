@@ -14,6 +14,7 @@ import { Assessment, Course } from '../../common/Types';
 import AssessmentCard from '../../components/AssessmentCard/AssessmentCard';
 import CreateAssessmentCard from '../../components/AssessmentCard/CreateAssessmentCard';
 import CreateAssessmentDrawer from '../../components/drawers/CreateAssessmentDrawer';
+import EditAssessmentDrawer from '../../components/drawers/EditAssessmentDrawer';
 
 const CoursePage = () => {
   // Extract courseId from the URL
@@ -22,6 +23,8 @@ const CoursePage = () => {
   const [ course, setCourse ] = useState<Course | null>(null);
   const [ courseAssessments, setCourseAssessments ] = useState<Assessment[]>([]);
   const [ isCreateAssessmentDrawerOpen, setIsCreateAssessmentDrawerOpen ]= useState<boolean>(false);
+  const [ isEditAssessmentDrawerOpen, setIsEditAssessmentDrawerOpen ] = useState<boolean>(false);
+  const [ editAssessment, setEditAssessment ] = useState<Assessment | null>(null);
   const courses = useAppSelector(( state ) => state.courses.courses);
   const assessments = useAppSelector(( state ) => state.assessments.assessments);
   const session = useAppSelector(( state ) => state.session.session);
@@ -50,7 +53,12 @@ const CoursePage = () => {
 
   const getCourseAssessmentCards = () => {
     let courseAssessmentCards = courseAssessments.map((assessment, index) =>(
-      <AssessmentCard key={index} assessment={assessment} />
+      <AssessmentCard 
+        key={index} 
+        assessment={assessment} 
+        setIsEditAssessmentDrawerOpen={setIsEditAssessmentDrawerOpen} 
+        setEditAssessment={setEditAssessment} 
+      />
     ))
     courseAssessmentCards.push(<CreateAssessmentCard key={courses.length} setIsCreateAssessmentDrawerOpen={setIsCreateAssessmentDrawerOpen} />)
     return courseAssessmentCards;
@@ -88,6 +96,16 @@ const CoursePage = () => {
         isOpen={isCreateAssessmentDrawerOpen} 
         setIsOpen={setIsCreateAssessmentDrawerOpen} 
       />
+      {
+        editAssessment && (
+          <EditAssessmentDrawer
+            assessment={editAssessment}
+            isOpen={isEditAssessmentDrawerOpen}
+            setIsOpen={setIsEditAssessmentDrawerOpen}
+          />
+        )
+      }
+      
     </Flex>
   )
 }

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import {
   Drawer,
@@ -15,34 +15,48 @@ import {
 import dayjs, { Dayjs } from 'dayjs';
 
 import { useAppDispatch, useAppSelector } from '../../API/hooks'
-import { createAssessment } from '../../API/assessmentsSlice';
+import { updateAssessment } from '../../API/assessmentsSlice';
+import { Assessment } from '../../common/Types';
 
-interface CreateAssessmentDrawerProps {
-  courseId: number;
+interface EditAssessmentDrawerProps {
+  assessment: Assessment
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const CreateAssessmentDrawer = ({ courseId, isOpen, setIsOpen } : CreateAssessmentDrawerProps) => {
+const EditAssessmentDrawer = ({ assessment, isOpen, setIsOpen } : EditAssessmentDrawerProps) => {
   const session = useAppSelector(( state ) => state.session.session)
-  const assessments = useAppSelector(( state ) => state.assessments);
   const dispatch = useAppDispatch();
 
-  const today = dayjs();
+  const [ name, setName ] = useState(assessment.name); 
+  const [ dueDate, setDueDate ] = useState<Dayjs>(dayjs(assessment.dueDate));   
+  const [ completeDate, setCompleteDate ] = useState<Dayjs | null>(dayjs(assessment.completeDate));   
+  const [ complete, setComplete ] = useState<boolean>(assessment.complete);
+  const [ weight, setWeight ] = useState<number>(assessment.weight);
+  const [ desiredMark, setDesiredMark ] = useState<number>(assessment.desiredMark);
+  const [ mark, setMark ] = useState<number | null>(assessment.mark);
 
-  const [ name, setName ] = useState(''); 
-  const [ dueDate, setDueDate ] = useState<Dayjs>(today);   
-  const [ completeDate, setCompleteDate ] = useState<Dayjs | null>(null);   
-  const [ complete, setComplete ] = useState<boolean>(false);
-  const [ weight, setWeight ] = useState<number>(0);
-  const [ desiredMark, setDesiredMark ] = useState<number>(0);
-  const [ mark, setMark ] = useState<number | null>(null);
+  const [ form ] = Form.useForm();
+
+  useEffect(() => {
+    if (assessment) {
+      form.setFieldsValue({
+        assessmentName: assessment.name,
+        dueDate: dayjs(assessment.dueDate),
+        weight: assessment.weight,
+        desiredScore: assessment.desiredMark,
+        status: assessment.complete,
+        mark: assessment.mark,
+        completeDate: assessment.complete ? dayjs(assessment.completeDate) : null
+      })
+    }
+  }, [assessment, form])
 
   const handleAssessmentCreate = () => {
     if (session) {
-      const assessment = {
+      const updatedAssessment = {
         userId: session.user.id,
-        courseId: courseId,
+        courseId: assessment.courseId,
         name: name,
         dueDate: dueDate.toISOString(),
         completeDate: completeDate ?  completeDate.toISOString() : null,
@@ -51,19 +65,22 @@ const CreateAssessmentDrawer = ({ courseId, isOpen, setIsOpen } : CreateAssessme
         mark: mark ?? null,
         complete: complete
       }
-      dispatch(createAssessment(assessment));
+      dispatch(updateAssessment({
+        id: assessment.id,
+        assessment: updatedAssessment
+      }));
     }
   }
   
   return (
     <Drawer
-      title="Create an assessment"
+      title={`Edit ${assessment.name}`}
       open={isOpen} 
       onClose={() => setIsOpen(false)}
     >    
       <Form 
+        form={form}
         layout="vertical" 
-        requiredMark
         onFinish={handleAssessmentCreate}
       >
         <Row>
@@ -71,7 +88,6 @@ const CreateAssessmentDrawer = ({ courseId, isOpen, setIsOpen } : CreateAssessme
             <Form.Item
               name="assessmentName"
               label="Assessment Name"
-              rules={[{ required: true, message: 'Please enter assessment name' }]}
             >
               <Input
                 style={{
@@ -95,7 +111,6 @@ const CreateAssessmentDrawer = ({ courseId, isOpen, setIsOpen } : CreateAssessme
                   width: '100%'
                 }}
                 showTime
-                defaultValue={today}
                 value={dueDate}
                 onOk={(date) => setDueDate(date)}
               />
@@ -107,7 +122,6 @@ const CreateAssessmentDrawer = ({ courseId, isOpen, setIsOpen } : CreateAssessme
             <Form.Item
               name="weight"
               label="Assessment Weight"
-              rules={[{ required: true, message: 'Please enter weight (0-100)' }]}
             >
               <InputNumber 
                 style={{
@@ -123,9 +137,8 @@ const CreateAssessmentDrawer = ({ courseId, isOpen, setIsOpen } : CreateAssessme
           </Col>
           <Col span={12}>
             <Form.Item
-              name="desiredScore"
-              label="Desired Score"
-              rules={[{ required: true, message: 'Please enter desired score (0-100)' }]}
+              name="desiredMark"
+              label="Desired Mark"
             >
               <InputNumber 
                 style={{
@@ -144,7 +157,6 @@ const CreateAssessmentDrawer = ({ courseId, isOpen, setIsOpen } : CreateAssessme
             <Form.Item
               name="status"
               label="Status"
-              rules={[{ required: false }]}
             >
               <Checkbox 
                 checked={complete} 
@@ -160,9 +172,8 @@ const CreateAssessmentDrawer = ({ courseId, isOpen, setIsOpen } : CreateAssessme
             <Row gutter={16}>
               <Col span={12}>
                 <Form.Item
-                  name="score"
-                  label="Assessment Score"
-                  rules={[{ required: true, message: 'Please enter assessment score (0-100)' }]}
+                  name="mark"
+                  label="Assessment Mark"
                 >
                   <InputNumber 
                     style={{
@@ -171,7 +182,7 @@ const CreateAssessmentDrawer = ({ courseId, isOpen, setIsOpen } : CreateAssessme
                     min={0}
                     max={100}
                     value={mark}
-                    onChange={(value) => setMark(value ?? 0)}
+                    onChange={(value) => setMark(value)}
                   />
                 </Form.Item>
               </Col>
@@ -179,14 +190,12 @@ const CreateAssessmentDrawer = ({ courseId, isOpen, setIsOpen } : CreateAssessme
                 <Form.Item
                   name="completeDate"
                   label="Complete Date"
-                  rules={[{ required: true, message: 'Please enter assessment complete date' }]}
                 >
                   <DatePicker 
                     style={{
                       width: '100%'
                     }}
                     showTime
-                    defaultValue={today}
                     value={completeDate}
                     onOk={(date) => setCompleteDate(date)}
                   />
@@ -216,9 +225,8 @@ const CreateAssessmentDrawer = ({ courseId, isOpen, setIsOpen } : CreateAssessme
                 }}
                 type="primary"
                 htmlType='submit'
-                loading={assessments.status == 'loading'}
               >
-                Create
+                Update
               </Button>
             </Form.Item>
           </Col>
@@ -228,4 +236,4 @@ const CreateAssessmentDrawer = ({ courseId, isOpen, setIsOpen } : CreateAssessme
   )
 }
 
-export default CreateAssessmentDrawer
+export default EditAssessmentDrawer
