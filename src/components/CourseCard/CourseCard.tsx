@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import {
   Flex,
   Card,
+  Popconfirm,
   Button,
   Typography
 } from 'antd';
@@ -11,6 +12,9 @@ import {
   DeleteOutlined, 
   EditOutlined 
 } from '@ant-design/icons';
+
+import { useAppDispatch } from '../../API/hooks'
+import { deleteCourse } from '../../API/coursesSlice';
 
 import { Course } from '../../common/Types';
 
@@ -21,15 +25,16 @@ interface CourseCardProps {
 }
 
 const CourseCard = ({ course } : CourseCardProps) => {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
    
   const handleCourseClick = () => {
     navigate(`/courses/${course.id}`);
   }
 
-  // const handleCourseDelete = (courseId: number) => {
-  //   dispatch(deleteCourse(courseId))
-  // }
+  const handleCourseDelete = () => {
+    dispatch(deleteCourse(course.id))
+  }
 
   return (
     <Card 
@@ -65,14 +70,24 @@ const CourseCard = ({ course } : CourseCardProps) => {
         <Button
           type='text'
           icon={<EditOutlined />}
-          onClick={() => {}} 
         />,
-        <Button
-          danger
-          type='text'
-          icon={<DeleteOutlined />}
-          onClick={() => {}}
-        />
+        <Popconfirm
+          title={`Delete ${course.name}`}
+          description='Are you sure you want to delete this course?'
+          onConfirm={(e) => {
+            e?.stopPropagation();
+            handleCourseDelete
+          }}
+          okText='Yes'
+          cancelText='No'
+        >
+          <Button
+            danger
+            type='text'
+            icon={<DeleteOutlined />}
+            onClick={(e) => e.stopPropagation()}
+          />
+        </Popconfirm>
       ]}
     >
       <Flex vertical>

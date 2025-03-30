@@ -75,6 +75,9 @@ const CreateAssessmentDrawer = ({ courseId, isOpen, setIsOpen } : CreateAssessme
               rules={[{ required: true, message: 'Please enter assessment name' }]}
             >
               <Input
+                style={{
+                  width: '100%'
+                }}
                 placeholder="Please enter assessment name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
@@ -87,9 +90,11 @@ const CreateAssessmentDrawer = ({ courseId, isOpen, setIsOpen } : CreateAssessme
             <Form.Item
               name="dueDate"
               label="Due Date"
-              rules={[{ required: true, message: 'Please enter assessment due date' }]}
             >
               <DatePicker 
+                style={{
+                  width: '100%'
+                }}
                 showTime
                 defaultValue={today}
                 value={dueDate}
@@ -106,6 +111,9 @@ const CreateAssessmentDrawer = ({ courseId, isOpen, setIsOpen } : CreateAssessme
               rules={[{ required: true, message: 'Please enter weight (0-100)' }]}
             >
               <InputNumber 
+                style={{
+                  width: '100%'
+                }}
                 min={0}
                 max={100}
                 formatter={(value) => `${value}%`}
@@ -121,6 +129,9 @@ const CreateAssessmentDrawer = ({ courseId, isOpen, setIsOpen } : CreateAssessme
               rules={[{ required: true, message: 'Please enter desired score (0-100)' }]}
             >
               <InputNumber 
+                style={{
+                  width: '100%'
+                }}
                 min={0}
                 max={100}
                 value={desiredMark}
@@ -147,14 +158,17 @@ const CreateAssessmentDrawer = ({ courseId, isOpen, setIsOpen } : CreateAssessme
         </Row>
         {
           complete && (
-            <Row>
-              <Col span={10}>
+            <Row gutter={16}>
+              <Col span={12}>
                 <Form.Item
                   name="score"
                   label="Assessment Score"
                   rules={[{ required: true, message: 'Please enter assessment score (0-100)' }]}
                 >
                   <InputNumber 
+                    style={{
+                      width: '100%'
+                    }}
                     min={0}
                     max={100}
                     value={mark}
@@ -162,13 +176,16 @@ const CreateAssessmentDrawer = ({ courseId, isOpen, setIsOpen } : CreateAssessme
                   />
                 </Form.Item>
               </Col>
-              <Col span={14}>
+              <Col span={12}>
                 <Form.Item
                   name="completeDate"
                   label="Complete Date"
                   rules={[{ required: true, message: 'Please enter assessment complete date' }]}
                 >
                   <DatePicker 
+                    style={{
+                      width: '100%'
+                    }}
                     showTime
                     defaultValue={today}
                     value={completeDate}
@@ -182,26 +199,28 @@ const CreateAssessmentDrawer = ({ courseId, isOpen, setIsOpen } : CreateAssessme
         <Row gutter={16}>
           <Col span={12}>
             <Form.Item>
-              <Space size='large'>
-                <Button 
-                  onClick={() => setIsOpen(false)}
-                >
-                  Cancel
-                </Button>
-              </Space>
+              <Button 
+                style={{
+                  width: '100%'
+                }}
+                onClick={() => setIsOpen(false)}
+              >
+                Cancel
+              </Button>
             </Form.Item>
           </Col>
           <Col span={12}>
             <Form.Item>
-              <Space size='large'>
-                <Button 
-                  type="primary"
-                  htmlType='submit'
-                  loading={assessments.status == 'loading'}
-                >
-                  Create
-                </Button>
-              </Space>
+              <Button 
+                style={{
+                  width: '100%'
+                }}
+                type="primary"
+                htmlType='submit'
+                loading={assessments.status == 'loading'}
+              >
+                Create
+              </Button>
             </Form.Item>
           </Col>
         </Row>

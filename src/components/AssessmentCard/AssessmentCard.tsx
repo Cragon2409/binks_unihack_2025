@@ -1,6 +1,7 @@
 import {
   Flex,
   Card,
+  Popconfirm,
   Button,
   Tag,
   Space,
@@ -31,7 +32,6 @@ const AssessmentCard = ({ assessment } : AssessmentCardProps) => {
   const dueDate = new Date(assessment.dueDate);
 
   const handleAssessmentDelete = () => {
-    console.log('Deleting assessment ' + assessment.id)
     dispatch(deleteAssessment(assessment.id))
   }
 
@@ -68,12 +68,19 @@ const AssessmentCard = ({ assessment } : AssessmentCardProps) => {
           icon={<EditOutlined />}
           onClick={() => {}} 
         />,
-        <Button
-          danger
-          type='text'
-          icon={<DeleteOutlined />}
-          onClick={handleAssessmentDelete}
-        />
+        <Popconfirm
+          title={`Delete ${assessment.name}`}
+          description='Are you sure you want to delete this assessment?'
+          onConfirm={handleAssessmentDelete}
+          okText='Yes'
+          cancelText='No'
+        >
+          <Button
+            danger
+            type='text'
+            icon={<DeleteOutlined />}
+          />
+        </Popconfirm>
       ]}
     >
       <Flex vertical gap='small'>

@@ -8,10 +8,12 @@ import {
   Input,
   ColorPicker,
   Button,
-  Space
 } from 'antd';
 
 import { AggregationColor } from 'antd/es/color-picker/color';
+
+import { useAppDispatch, useAppSelector } from '../../API/hooks'
+import { createCourse } from '../../API/coursesSlice';
 
 interface CreateCourseDrawerProps {
   isOpen: boolean;
@@ -19,12 +21,24 @@ interface CreateCourseDrawerProps {
 }
 
 const CreateCourseDrawer = ({ isOpen, setIsOpen } : CreateCourseDrawerProps) => {
-  const [text, setText] = useState(''); 
-  const [colour, setColour] = useState<AggregationColor>(new AggregationColor('#ffffff'));   
+  const session = useAppSelector(( state ) => state.session.session)
+  const dispatch = useAppDispatch();
 
-  // const handleCourseCreate = (courseId: number) => {
-  //   dispatch(createCourse(courseId))
-  // }
+  const [name, setName] = useState(''); 
+  const [colour, setColour] = useState<AggregationColor>(new AggregationColor('#ffffff'));   
+  
+  const handleCourseCreate = (courseId: number) => {
+    dispatch(createCourse(courseId))
+
+    if (session) {
+      const course = {
+        userId: session.user.id,
+        name: name,
+        colour: colour.toHexString()
+      }
+      dispatch(createCourse(course));
+    }
+  }
   
   return (
     <Drawer
@@ -32,7 +46,11 @@ const CreateCourseDrawer = ({ isOpen, setIsOpen } : CreateCourseDrawerProps) => 
       open={isOpen} 
       onClose={() => setIsOpen(false)}
     >    
-      <Form layout="vertical" requiredMark>
+      <Form 
+        layout="vertical" 
+        requiredMark
+        onFinish={(handleCourseCreate)}
+      >
         <Row gutter={16}>
           <Col span={24}>
             <Form.Item
@@ -41,9 +59,12 @@ const CreateCourseDrawer = ({ isOpen, setIsOpen } : CreateCourseDrawerProps) => 
               rules={[{ required: true, message: 'Please enter course name' }]}
             >
               <Input
+                style={{
+                  width: '100%'
+                }}
                 placeholder="Please enter course name"
-                value={text}
-                onChange={(e) => setText(e.target.value)}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
               />
             </Form.Item>
           </Col>
@@ -56,6 +77,9 @@ const CreateCourseDrawer = ({ isOpen, setIsOpen } : CreateCourseDrawerProps) => 
               rules={[{ required: true, message: 'Please enter course colour' }]}
             >
               <ColorPicker
+                style={{
+                  width: '100%'
+                }}
                 value={colour}
                 onChange={(colour: AggregationColor) => setColour(colour)}
                 showText={() => 'Course colour'}
@@ -63,22 +87,30 @@ const CreateCourseDrawer = ({ isOpen, setIsOpen } : CreateCourseDrawerProps) => 
             </Form.Item>
           </Col>
         </Row>
-        <Row gutter={0}>
-          <Col span={24}>
+        <Row gutter={16}>
+          <Col span={12}>
             <Form.Item>
-              <Space size='large'>
-                <Button 
-                  onClick={() => setIsOpen(false)}
-                >
-                  Cancel
-                </Button>
-                <Button 
-                  type="primary"
-                  onClick={() => {}} // TODO: Finish 
-                >
-                  Create
-                </Button>
-              </Space>
+              <Button 
+                style={{
+                  width: '100%'
+                }}
+                onClick={() => setIsOpen(false)}
+              >
+                Cancel
+              </Button>
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item>
+              <Button 
+                style={{
+                  width: '100%'
+                }}
+                type="primary"
+                htmlType='submit'
+              >
+                Create
+              </Button>
             </Form.Item>
           </Col>
         </Row>

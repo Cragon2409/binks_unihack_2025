@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 import {
   Flex,
   Breadcrumb,
-  Typography
 } from 'antd';
 
 import { useAppDispatch, useAppSelector } from '../../API/hooks'
@@ -16,11 +15,10 @@ import AssessmentCard from '../../components/AssessmentCard/AssessmentCard';
 import CreateAssessmentCard from '../../components/AssessmentCard/CreateAssessmentCard';
 import CreateAssessmentDrawer from '../../components/drawers/CreateAssessmentDrawer';
 
-const { Title } = Typography;
-
 const CoursePage = () => {
   // Extract courseId from the URL
   const { courseId } = useParams(); 
+  const navigate = useNavigate();
   const [ course, setCourse ] = useState<Course | null>(null);
   const [ courseAssessments, setCourseAssessments ] = useState<Assessment[]>([]);
   const [ isCreateAssessmentDrawerOpen, setIsCreateAssessmentDrawerOpen ]= useState<boolean>(false);
@@ -42,13 +40,13 @@ const CoursePage = () => {
         courses.find((course) => course.id === Number(courseId)) || null
       );
     }
-  }, [courses, courseId])
+  }, [courses, courseId, assessments])
 
   useEffect(() => {
     if (course) {      
       setCourseAssessments(assessments.filter((assessments) => assessments.courseId == course.id));
     }
-  }, [course, courseId])
+  }, [course, courseId, assessments])
 
   const getCourseAssessmentCards = () => {
     let courseAssessmentCards = courseAssessments.map((assessment, index) =>(
@@ -70,7 +68,8 @@ const CoursePage = () => {
         items={[
           {
             title: 'Courses',
-            href: '/courses'
+            href: '/courses',
+            onClick: () => navigate('/courses')
           },
           {
             title: course?.name,

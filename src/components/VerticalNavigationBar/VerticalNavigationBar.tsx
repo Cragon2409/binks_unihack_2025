@@ -99,7 +99,6 @@ export default function VerticalNavigationBar() {
         mode="inline" 
         theme="light" 
         defaultSelectedKeys={['home']}
-        defaultOpenKeys={['courses']}
       />
     </Sider>
   )
