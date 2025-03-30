@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router';
 
 import { 
   Layout, 
@@ -17,8 +18,8 @@ const { Text } = Typography;
 
 export default function HeaderContent() {
   const { token: { colorBgContainer, colorBorder } } = theme.useToken();
-  
   const [isProfileDrawerOpen, setIsProfileDrawerOpen] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <Header 
@@ -35,8 +36,15 @@ export default function HeaderContent() {
       }} 
     >
       <Flex style={{ width: '100% '}}justify='space-between'>
-        <Flex gap='small' align='center'>
-          <img src="favicon.ico" alt="Unitrack Logo" width={32} height={32} />
+        <Flex 
+          style={{
+            cursor: 'pointer'
+          }}
+          gap='small' 
+          align='center' 
+          onClick={() => navigate('/')}
+        >
+          <img src="/favicon.ico" alt="Unitrack Logo" width={32} height={32} />
           <Text 
             style={{ 
               fontSize: "20px", 

@@ -41,14 +41,13 @@ const CoursePage = () => {
         courses.find((course) => course.id === Number(courseId)) || null
       );
     }
-  }, [courses])
+  }, [courses, courseId])
 
   useEffect(() => {
     if (course) {      
       setCourseAssessments(assessments.filter((assessments) => assessments.courseId == course.id));
     }
-  }, [course])
-
+  }, [course, courseId])
 
   const getCourseAssessmentCards = () => {
     let courseAssessmentCards = courseAssessments.map((assessment, index) =>(
