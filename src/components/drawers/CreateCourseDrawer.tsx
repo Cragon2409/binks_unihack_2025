@@ -27,7 +27,7 @@ const CreateCourseDrawer = ({ isOpen, setIsOpen } : CreateCourseDrawerProps) => 
   const [name, setName] = useState(''); 
   const [colour, setColour] = useState<AggregationColor>(new AggregationColor('#ffffff'));   
   
-  const handleCourseCreate = (courseId: number) => {
+  const handleCourseCreate = () => {
     if (session) {
       const course = {
         userId: session.user.id,

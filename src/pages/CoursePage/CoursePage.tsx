@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useParams, useNavigate } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 import {
   Flex,
@@ -19,7 +19,6 @@ import EditAssessmentDrawer from '../../components/drawers/EditAssessmentDrawer'
 const CoursePage = () => {
   // Extract courseId from the URL
   const { courseId } = useParams(); 
-  const navigate = useNavigate();
   const [ course, setCourse ] = useState<Course | null>(null);
   const [ courseAssessments, setCourseAssessments ] = useState<Assessment[]>([]);
   const [ isCreateAssessmentDrawerOpen, setIsCreateAssessmentDrawerOpen ]= useState<boolean>(false);
