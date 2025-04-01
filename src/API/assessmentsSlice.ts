@@ -1,9 +1,15 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { 
+  createSlice, 
+  createAsyncThunk, 
+  PayloadAction 
+} from '@reduxjs/toolkit';
 import { supabase } from './supabase';
+
+import { Assessment } from '../common/Types';
 
 // Define a type for the slice state
 export interface AssessmentsState {
-  assessments: Array<any>,
+  assessments: Array<Assessment>,
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
 }
@@ -19,7 +25,7 @@ const getAssessments = async (id: any): Promise<any> => {
     const {data, error} = await supabase
       .from('assessments')
       .select()
-      .eq('user_id', id);
+      .eq('userId', id);
     if (error) {
       throw new Error(error.message);
     }
@@ -37,7 +43,7 @@ const createAssessments = async (assessment: any): Promise<any> => {
     return data && data[0] ? data[0] : null;
 };
 
-const updateAssessments = async (id: number, assessment: any): Promise<any> => {
+const updateAssessments = async (id: number, assessment: Assessment): Promise<any> => {
     const { data, error } = await supabase
         .from('assessments')
         .update(assessment)
@@ -78,7 +84,7 @@ export const createAssessment = createAsyncThunk(
 
 export const updateAssessment = createAsyncThunk(
     'assessments/updateAssessment',
-    async ({ id, assessment }: { id: number, assessment: any }) => {
+    async ({ id, assessment }: { id: number, assessment: Assessment }) => {
       const newAssessment = await updateAssessments(id, assessment);
       return newAssessment;
     }

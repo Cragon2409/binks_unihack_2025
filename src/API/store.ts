@@ -1,9 +1,10 @@
-import { configureStore } from '@reduxjs/toolkit'
-import courseReducer from './coursesSlice'
-import sessionReducer from './sessionSlice'
-import assessmentReducer from './assessmentsSlice'
-import storage from 'redux-persist/lib/storage'; 
+import { configureStore } from '@reduxjs/toolkit';
 import { persistReducer, persistStore } from 'redux-persist';
+import storage from 'redux-persist/lib/storage'; 
+
+import courseReducer from './coursesSlice';
+import sessionReducer from './sessionSlice';
+import assessmentReducer from './assessmentsSlice';
 
 const persistConfig = {
     key: 'root',

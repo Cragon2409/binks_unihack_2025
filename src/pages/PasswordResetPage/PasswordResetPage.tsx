@@ -12,7 +12,7 @@ import { LoginProps } from '../../common/Types';
 
 const { Title } = Typography;
 
-export default function PasswordReset({ supabase }: LoginProps) {
+export default function PasswordResetPage({ supabase }: LoginProps) {
   const [password, setPassword] = useState('');
   const [passwordResetLoading, setPasswordResetLoading] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(false);
