@@ -124,7 +124,9 @@ export const coursesSlice = createSlice({
       })
       .addCase(updateCourse.fulfilled, (state, action: PayloadAction<Course>) => {
         state.status = 'succeeded';
-        state.courses.push(action.payload);
+        state.courses.map((course) => (
+          course.id === action.payload.id ? action.payload : course
+        ))
       })
       .addCase(updateCourse.rejected, (state, action) => {
         state.status = 'failed';

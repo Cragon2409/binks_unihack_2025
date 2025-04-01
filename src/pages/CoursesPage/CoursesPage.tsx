@@ -28,17 +28,20 @@ export default function CoursesPage() {
     if (session) {
       dispatch(fetchCourses(session.user.id));
     }
-  }, [session, isEditCourseDrawerOpen, isCreateCourseDrawerOpen]);
+  }, [session, courses]);
 
   const getCourseCards = () => {
-    let cards = courses.map((course, index) => (
-      <CourseCard 
-        key={index} 
-        course={course} 
-        setIsEditCourseDrawerOpen={setIsEditCourseDrawerOpen} 
-        setEditCourse={setEditCourse }
-      />
-    ))
+    let cards = [...courses]
+      .sort((a, b) => a.id - b.id)
+      .map((course, index) => (
+        <CourseCard 
+          key={index} 
+          course={course} 
+          setIsEditCourseDrawerOpen={setIsEditCourseDrawerOpen} 
+          setEditCourse={setEditCourse }
+        />
+      )
+    );
     cards.push(<CreateCourseCard key={courses.length} setIsCreateCourseDrawerOpen={setIsCreateCourseDrawerOpen} />)
     return cards
   }
