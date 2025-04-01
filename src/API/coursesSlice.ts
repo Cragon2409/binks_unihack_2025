@@ -45,6 +45,18 @@ const createCourses = async (course: any): Promise<any> => {
   return data && data[0] ? data[0] : null;
 };
 
+const updateCourses = async (id: number, course: Course): Promise<any> => {
+  const { data, error } = await supabase
+      .from('courses')
+      .update(course)
+      .eq('id', id)
+      .select()
+  if (error) {
+      throw new Error(error.message);
+  }
+  return data && data[0] ? data[0] : null;
+};
+
 const deleteCourses = async (id: number): Promise<any> => {
   const { data, error } = await supabase
     .from('courses')
@@ -68,6 +80,14 @@ export const createCourse = createAsyncThunk(
   'courses/createCourse',
   async (course: any) => {
     const newCourse = await createCourses(course);
+    return newCourse;
+  }
+);
+
+export const updateCourse = createAsyncThunk(
+  'courses/updateCourse',
+  async ({ id, course }: { id: number, course: Course }) => {
+    const newCourse = await updateCourses(id, course);
     return newCourse;
   }
 );
@@ -98,6 +118,17 @@ export const coursesSlice = createSlice({
       .addCase(fetchCourses.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message || 'Failed to fetch courses';
+      })
+      .addCase(updateCourse.pending, state => {
+        state.status = 'loading';
+      })
+      .addCase(updateCourse.fulfilled, (state, action: PayloadAction<Course>) => {
+        state.status = 'succeeded';
+        state.courses.push(action.payload);
+      })
+      .addCase(updateCourse.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message || 'Failed to update course';
       })
       .addCase(createCourse.pending, (state) => {
         state.status = 'loading';

@@ -43,7 +43,7 @@ const createAssessments = async (assessment: any): Promise<any> => {
     return data && data[0] ? data[0] : null;
 };
 
-const updateAssessments = async (id: number, assessment: any): Promise<any> => {
+const updateAssessments = async (id: number, assessment: Assessment): Promise<any> => {
     const { data, error } = await supabase
         .from('assessments')
         .update(assessment)
@@ -84,7 +84,7 @@ export const createAssessment = createAsyncThunk(
 
 export const updateAssessment = createAsyncThunk(
     'assessments/updateAssessment',
-    async ({ id, assessment }: { id: number, assessment: any }) => {
+    async ({ id, assessment }: { id: number, assessment: Assessment }) => {
       const newAssessment = await updateAssessments(id, assessment);
       return newAssessment;
     }

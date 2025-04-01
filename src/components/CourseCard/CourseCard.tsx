@@ -1,11 +1,9 @@
 import { useNavigate } from 'react-router-dom';
 
 import {
-  Flex,
   Card,
   Popconfirm,
   Button,
-  Typography
 } from 'antd';
 
 import { 
@@ -18,13 +16,17 @@ import { deleteCourse } from '../../API/coursesSlice';
 
 import { Course } from '../../common/Types';
 
-const { Text } = Typography;
-
 interface CourseCardProps {
   course: Course;
+  setIsEditCourseDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setEditCourse: React.Dispatch<React.SetStateAction<Course | null>>;
 }
 
-const CourseCard = ({ course } : CourseCardProps) => {
+const CourseCard = ({ 
+  course, 
+  setIsEditCourseDrawerOpen, 
+  setEditCourse 
+} : CourseCardProps) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
    
@@ -71,6 +73,11 @@ const CourseCard = ({ course } : CourseCardProps) => {
         <Button
           type='text'
           icon={<EditOutlined />}
+          onClick={(e) => {
+            e.stopPropagation();
+            setEditCourse(course);
+            setIsEditCourseDrawerOpen(true);
+          }}
         />,
         <Popconfirm
           title={`Delete ${course.name}`}

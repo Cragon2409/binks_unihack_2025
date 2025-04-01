@@ -25,12 +25,13 @@ interface EditAssessmentDrawerProps {
 }
 
 const EditAssessmentDrawer = ({ assessment, isOpen, setIsOpen } : EditAssessmentDrawerProps) => {
-  const session = useAppSelector(( state ) => state.session.session)
+  const session = useAppSelector(( state ) => state.session.session);
+  const assessments = useAppSelector(( state ) => state.assessments);
   const dispatch = useAppDispatch();
 
   const [ name, setName ] = useState(assessment.name); 
   const [ dueDate, setDueDate ] = useState<Dayjs>(dayjs(assessment.dueDate));   
-  const [ completeDate, setCompleteDate ] = useState<Dayjs | null>(dayjs(assessment.completeDate));   
+  const [ completeDate, setCompleteDate ] = useState<Dayjs>(dayjs(assessment.completeDate));   
   const [ complete, setComplete ] = useState<boolean>(assessment.complete);
   const [ weight, setWeight ] = useState<number>(assessment.weight);
   const [ desiredMark, setDesiredMark ] = useState<number>(assessment.desiredMark);
@@ -40,26 +41,36 @@ const EditAssessmentDrawer = ({ assessment, isOpen, setIsOpen } : EditAssessment
 
   useEffect(() => {
     if (assessment) {
+      setName(assessment.name);
+      setDueDate(dayjs(assessment.dueDate));
+      setCompleteDate(dayjs(assessment.completeDate));
+      setComplete(assessment.complete);
+      setWeight(assessment.weight);
+      setDesiredMark(assessment.desiredMark);
+      setMark(assessment.mark);
+
       form.setFieldsValue({
-        assessmentName: assessment.name,
+        name: assessment.name,
         dueDate: dayjs(assessment.dueDate),
+        completeDate: assessment.completeDate ? dayjs(assessment.completeDate) : null,
+        complete: assessment.complete,
         weight: assessment.weight,
         desiredScore: assessment.desiredMark,
-        status: assessment.complete,
         mark: assessment.mark,
-        completeDate: assessment.complete ? dayjs(assessment.completeDate) : null
-      })
+      });
     }
   }, [assessment, form])
 
-  const handleAssessmentCreate = () => {
+  const handleAssessmentEdit = () => {
     if (session) {
       const updatedAssessment = {
+        id: assessment.id,
         userId: session.user.id,
         courseId: assessment.courseId,
+        createdAt: assessment.createdAt,
         name: name,
         dueDate: dueDate.toISOString(),
-        completeDate: completeDate ?  completeDate.toISOString() : null,
+        completeDate: completeDate.isValid() ?  completeDate.toISOString() : null,
         weight: weight,
         desiredMark: desiredMark,
         mark: mark ?? null,
@@ -81,20 +92,20 @@ const EditAssessmentDrawer = ({ assessment, isOpen, setIsOpen } : EditAssessment
       <Form 
         form={form}
         layout="vertical" 
-        onFinish={handleAssessmentCreate}
+        onFinish={handleAssessmentEdit}
       >
         <Row>
           <Col span={24}>
             <Form.Item
-              name="assessmentName"
-              label="Assessment Name"
+              name='name'
+              valuePropName='value'
+              label='Assessment Name'
             >
               <Input
                 style={{
                   width: '100%'
                 }}
-                placeholder="Please enter assessment name"
-                value={name}
+                placeholder='Please enter assessment name'
                 onChange={(e) => setName(e.target.value)}
               />
             </Form.Item>
@@ -103,15 +114,15 @@ const EditAssessmentDrawer = ({ assessment, isOpen, setIsOpen } : EditAssessment
         <Row>
           <Col span={24}>
             <Form.Item
-              name="dueDate"
-              label="Due Date"
+              name='dueDate'
+              valuePropName='value'
+              label='Due Date'
             >
               <DatePicker 
                 style={{
                   width: '100%'
                 }}
                 showTime
-                value={dueDate}
                 onOk={(date) => setDueDate(date)}
               />
             </Form.Item>
@@ -120,7 +131,8 @@ const EditAssessmentDrawer = ({ assessment, isOpen, setIsOpen } : EditAssessment
         <Row gutter={16}>
           <Col span={12}>
             <Form.Item
-              name="weight"
+              name='weight'
+              valuePropName='value'
               label="Assessment Weight"
             >
               <InputNumber 
@@ -130,7 +142,6 @@ const EditAssessmentDrawer = ({ assessment, isOpen, setIsOpen } : EditAssessment
                 min={0}
                 max={100}
                 formatter={(value) => `${value}%`}
-                value={weight}
                 onChange={(value) => setWeight(value ?? 0)}
               />
             </Form.Item>
@@ -138,6 +149,7 @@ const EditAssessmentDrawer = ({ assessment, isOpen, setIsOpen } : EditAssessment
           <Col span={12}>
             <Form.Item
               name="desiredMark"
+              valuePropName='value'
               label="Desired Mark"
             >
               <InputNumber 
@@ -146,7 +158,6 @@ const EditAssessmentDrawer = ({ assessment, isOpen, setIsOpen } : EditAssessment
                 }}
                 min={0}
                 max={100}
-                value={desiredMark}
                 onChange={(value) => setDesiredMark(value ?? 0)}
               />
             </Form.Item>
@@ -155,11 +166,11 @@ const EditAssessmentDrawer = ({ assessment, isOpen, setIsOpen } : EditAssessment
         <Row>
           <Col span={24}>
             <Form.Item
-              name="status"
+              name='complete'
+              valuePropName='checked'
               label="Status"
             >
               <Checkbox 
-                checked={complete} 
                 onChange={(e) => setComplete(e.target.checked)}
               >
                 Complete
@@ -172,8 +183,10 @@ const EditAssessmentDrawer = ({ assessment, isOpen, setIsOpen } : EditAssessment
             <Row gutter={16}>
               <Col span={12}>
                 <Form.Item
-                  name="mark"
-                  label="Assessment Mark"
+                  name='mark'
+                  valuePropName='value'
+                  label='Assessment Mark'
+                  rules={[{ required: true, message: 'Please enter assessment mark (0-100)' }]}
                 >
                   <InputNumber 
                     style={{
@@ -181,22 +194,22 @@ const EditAssessmentDrawer = ({ assessment, isOpen, setIsOpen } : EditAssessment
                     }}
                     min={0}
                     max={100}
-                    value={mark}
                     onChange={(value) => setMark(value)}
                   />
                 </Form.Item>
               </Col>
               <Col span={12}>
                 <Form.Item
-                  name="completeDate"
-                  label="Complete Date"
+                  name='completeDate'
+                  valuePropName='value'
+                  label='Complete Date'
+                  rules={[{ required: true, message: 'Please enter assessment complete date' }]}
                 >
                   <DatePicker 
                     style={{
                       width: '100%'
                     }}
                     showTime
-                    value={completeDate}
                     onOk={(date) => setCompleteDate(date)}
                   />
                 </Form.Item>
@@ -223,8 +236,9 @@ const EditAssessmentDrawer = ({ assessment, isOpen, setIsOpen } : EditAssessment
                 style={{
                   width: '100%'
                 }}
-                type="primary"
+                type='primary'
                 htmlType='submit'
+                loading={assessments.status == 'loading'}
               >
                 Update
               </Button>

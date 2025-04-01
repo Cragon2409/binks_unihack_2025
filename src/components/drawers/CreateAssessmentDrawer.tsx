@@ -223,7 +223,7 @@ const CreateAssessmentDrawer = ({ courseId, isOpen, setIsOpen } : CreateAssessme
             </Form.Item>
           </Col>
         </Row>
-        </Form>
+      </Form>
     </Drawer>
   )
 }

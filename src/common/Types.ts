@@ -3,7 +3,7 @@ import { SupabaseClient } from "@supabase/supabase-js"
 
 export interface Assessment {
   id: number;
-  userId: number;
+  userId: string;
   courseId: number;
   name: string;
   createdAt: string;
@@ -19,7 +19,7 @@ export interface Course {
   id: number;
   createdAt: string;
   colour: string;
-  userId: number;
+  userId: string;
   name: string
 }
 

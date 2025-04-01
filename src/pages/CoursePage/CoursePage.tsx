@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 
 import {
   Flex,
@@ -75,9 +75,7 @@ const CoursePage = () => {
       <Breadcrumb
         items={[
           {
-            title: 'Courses',
-            href: '/courses',
-            onClick: () => navigate('/courses')
+            title: <Link to='/courses'>Courses</Link>,
           },
           {
             title: course?.name,
