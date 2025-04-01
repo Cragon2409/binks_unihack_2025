@@ -9,14 +9,22 @@ import {
   theme
 } from 'antd';
 
-import { UserOutlined } from '@ant-design/icons';
+import { UserOutlined, MenuOutlined } from '@ant-design/icons';
 
 import ProfileDrawer from '../drawers/ProfileDrawer';
 
 const { Header} = Layout;
 const { Text } = Typography;
 
-export default function HeaderContent() {
+interface HeaderContentProps {
+  isMobile: boolean;
+  setIsMobileVerticalNavOpen: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+export default function HeaderContent({ 
+  isMobile, 
+  setIsMobileVerticalNavOpen 
+} : HeaderContentProps) {
   const { token: { colorBgContainer, colorBorder } } = theme.useToken();
   const [isProfileDrawerOpen, setIsProfileDrawerOpen] = useState(false);
   const navigate = useNavigate();
@@ -36,6 +44,15 @@ export default function HeaderContent() {
       }} 
     >
       <Flex style={{ width: '100% '}}justify='space-between'>
+        {
+          isMobile && (
+            <Button 
+              type='text'
+              icon={<MenuOutlined />} 
+              onClick={() => setIsMobileVerticalNavOpen(prev => !prev)}
+            />
+          )
+        }
         <Flex 
           style={{
             cursor: 'pointer'

@@ -10,11 +10,15 @@ import { GithubOutlined } from '@ant-design/icons';
 const { Footer } = Layout;
 const { Text } = Typography;
 
-export default function FooterContent() {
+interface FooterContentProps {
+  isMobile: boolean;
+}
+
+export default function FooterContent({ isMobile } : FooterContentProps) {
   return (
     <Footer
       style={{
-        marginLeft: 75
+        marginLeft: isMobile ?  0 : 75
       }}
     >
       <Flex 

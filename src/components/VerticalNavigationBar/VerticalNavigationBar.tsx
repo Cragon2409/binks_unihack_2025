@@ -20,7 +20,17 @@ import { fetchCourses } from '../../API/coursesSlice'
 
 const { Sider } = Layout;
 
-export default function VerticalNavigationBar() {
+interface VerticalNavigationBarProps {
+  isMobile: boolean;
+  isMobileVerticalNavOpen: boolean;
+  setIsMobileVerticalNavOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export default function VerticalNavigationBar({
+  isMobile,
+  isMobileVerticalNavOpen,
+  setIsMobileVerticalNavOpen
+}: VerticalNavigationBarProps) {
   const { token: { colorBorder } } = theme.useToken();
   const [collapsed, setCollapsed] = useState(true);
   const courses = useAppSelector(( state ) => state.courses.courses);
@@ -37,6 +47,7 @@ export default function VerticalNavigationBar() {
   const handleNavigate = (dst: string) => {
     navigate(dst);
     setCollapsed(true);
+    setIsMobileVerticalNavOpen(false);
   }
 
   const items: MenuProps['items'] = [
@@ -69,7 +80,7 @@ export default function VerticalNavigationBar() {
     }
   ]
 
-  return (
+  return (!isMobile || isMobileVerticalNavOpen) && (
     <Sider
       style={{
         overflow: 'auto',
@@ -87,7 +98,7 @@ export default function VerticalNavigationBar() {
       breakpoint='lg'
       collapsedWidth={75} 
       width={300} 
-      collapsed={collapsed} 
+      collapsed={isMobile ? false : collapsed} 
       onMouseEnter={() => setCollapsed(false)}
       onMouseLeave={() => setCollapsed(true)}
     >
