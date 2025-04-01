@@ -1,51 +1,55 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
-import { Layout } from 'antd';
+
+import { 
+  Layout,
+} from 'antd';
 
 import HeaderContent from './HeaderContent';
 import FooterContent from './FooterContent';
-import * as Constants from '../../common/Constants';
+import VerticalNavigationBar from '../VerticalNavigationBar/VerticalNavigationBar';
 
-const { Header, Content, Footer } = Layout;
-
-const layoutStyle = {
-  minHeight: "100vh"
-};
-
-const headerStyle: React.CSSProperties = {
-  display: "flex",
-  position: "sticky",
-  top: 0,
-  zIndex: 1,
-  alignItems: "center",
-  padding: "12px"
-};
-
-const contentStyle: React.CSSProperties = {
-  maxWidth: Constants.maxWidth,
-  width: "100%",
-  textAlign: "left",
-  margin: "0 auto",
-  padding: "12px"
-};
-
-const footerStyle: React.CSSProperties = {
-  textAlign: "center",
-  padding: "12px"
-};
+const { Content } = Layout;
 
 export default function AppLayout() {
+  const [ isMobile, setIsMobile ] = useState<boolean>(false);
+  const [ isMobileVerticalNavOpen, setIsMobileVerticalNavOpen ] = useState<boolean>(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 450) {
+        setIsMobile(true);
+      } 
+      else {
+        setIsMobile(false);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    handleResize(); 
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  console.log(isMobileVerticalNavOpen);
+
   return (
-    <Layout style={layoutStyle}>
-      <Header style={headerStyle}>
-        <HeaderContent/>
-      </Header>
-      <Content style={contentStyle}>
-        <Outlet/>
-      </Content>
-      <Footer style={footerStyle}>
-        <FooterContent/>
-      </Footer>
+    <Layout style={{ minHeight: '100vh' }}>
+      <HeaderContent 
+        isMobile={isMobile} 
+        setIsMobileVerticalNavOpen={setIsMobileVerticalNavOpen} 
+      />
+      <Layout>
+         <VerticalNavigationBar 
+          isMobile={isMobile} 
+          isMobileVerticalNavOpen={isMobileVerticalNavOpen} 
+          setIsMobileVerticalNavOpen={setIsMobileVerticalNavOpen}
+        />
+        <Content style={{ marginLeft: isMobile ? 0 : 75, padding: 0 }}>
+          <Outlet />
+        </Content>        
+      </Layout>
+      <FooterContent isMobile={isMobile} />
     </Layout>
   );
 }

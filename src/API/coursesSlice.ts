@@ -1,10 +1,17 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import type { RootState } from './store'
+import { 
+  createSlice, 
+  createAsyncThunk, 
+  PayloadAction 
+} from '@reduxjs/toolkit';
+
 import { supabase } from './supabase';
+import { Course } from '../common/Types';
+
+import type { RootState } from './store'
 
 // Define a type for the slice state
 export interface CoursesState {
-  courses: Array<any>,
+  courses: Array<Course>,
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
 }
@@ -20,7 +27,7 @@ const getCourses = async (id: any): Promise<any> => {
   const {data, error} = await supabase
     .from('courses')
     .select()
-    .eq('user_id', id);
+    .eq('userId', id);
   if (error) {
     throw new Error(error.message);
   }
@@ -34,6 +41,18 @@ const createCourses = async (course: any): Promise<any> => {
     .select();
   if (error) {
     throw new Error(error.message);
+  }
+  return data && data[0] ? data[0] : null;
+};
+
+const updateCourses = async (id: number, course: Course): Promise<any> => {
+  const { data, error } = await supabase
+      .from('courses')
+      .update(course)
+      .eq('id', id)
+      .select()
+  if (error) {
+      throw new Error(error.message);
   }
   return data && data[0] ? data[0] : null;
 };
@@ -65,6 +84,14 @@ export const createCourse = createAsyncThunk(
   }
 );
 
+export const updateCourse = createAsyncThunk(
+  'courses/updateCourse',
+  async ({ id, course }: { id: number, course: Course }) => {
+    const newCourse = await updateCourses(id, course);
+    return newCourse;
+  }
+);
+
 export const deleteCourse = createAsyncThunk(
   'courses/deleteCourse',
   async (id: number) => {
@@ -84,7 +111,7 @@ export const coursesSlice = createSlice({
       .addCase(fetchCourses.pending, state => {
         state.status = 'loading';
       })
-      .addCase(fetchCourses.fulfilled, (state, action: PayloadAction<any[]>) => {
+      .addCase(fetchCourses.fulfilled, (state, action: PayloadAction<Course[]>) => {
         state.status = 'succeeded';
         state.courses = action.payload;
       })
@@ -92,10 +119,23 @@ export const coursesSlice = createSlice({
         state.status = 'failed';
         state.error = action.error.message || 'Failed to fetch courses';
       })
+      .addCase(updateCourse.pending, state => {
+        state.status = 'loading';
+      })
+      .addCase(updateCourse.fulfilled, (state, action: PayloadAction<Course>) => {
+        state.status = 'succeeded';
+        state.courses.map((course) => (
+          course.id === action.payload.id ? action.payload : course
+        ))
+      })
+      .addCase(updateCourse.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message || 'Failed to update course';
+      })
       .addCase(createCourse.pending, (state) => {
         state.status = 'loading';
       })
-      .addCase(createCourse.fulfilled, (state, action: PayloadAction<any>) => {
+      .addCase(createCourse.fulfilled, (state, action: PayloadAction<Course>) => {
         state.status = 'succeeded';
         state.courses.push(action.payload);
       })
@@ -119,7 +159,6 @@ export const coursesSlice = createSlice({
 
 export const {  } = coursesSlice.actions
 
-export const selectCourse = (state: RootState) => state.courses.courses
 export const selectCourses = (state: RootState) => state.courses.courses;
 export const selectCoursesStatus = (state: RootState) => state.courses.status;
 export const selectCoursesError = (state: RootState) => state.courses.error;

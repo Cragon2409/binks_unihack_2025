@@ -1,10 +1,10 @@
-import { Typography, Checkbox, Flex, List, Card, Progress, Row, Col, theme } from 'antd';
+import { Breadcrumb, Typography, Checkbox, Flex, List, Card, Progress, Row, Col, theme } from 'antd';
 import { fetchAssessments } from '../../API/assessmentsSlice';
 import { fetchCourses } from '../../API/coursesSlice'
 import { useAppDispatch, useAppSelector } from '../../API/hooks'
 import { useEffect, useState } from 'react'
+import { Assessment } from '../../common/Types';
 
-const { Title } = Typography;
 const WEEKDAYS = [
   "Mon",
   "Tue",
@@ -23,7 +23,7 @@ function getFormatFromISO(isoDate : string) {
 
 function getItemCourse(item : any, courses : any) {
   for (var course of courses) {
-    if (item.course_id == course.id) {
+    if (item.courseId == course.id) {
       return course;
     }
   }
@@ -32,13 +32,13 @@ function getItemCourse(item : any, courses : any) {
 
 function getLatestDay(assessments : any) {
   const currentDate = new Date().toISOString();
-  const incompleteAssessments = assessments.filter((item : any) => item.complete == false && item.due_date.localeCompare(currentDate)); //filter out past and completed assessments
+  const incompleteAssessments = assessments.filter((item : any) => item.complete == false && item.dueDate.localeCompare(currentDate)); //filter out past and completed assessments
 
   if (incompleteAssessments.length === 0) {
     return 0;
   }
 
-  const latestItem = new Date(incompleteAssessments.reduce((latest : any, current : any) => latest.due_date.localeCompare(current.due_date) ? latest : current ).due_date)
+  const latestItem = new Date(incompleteAssessments.reduce((latest : Assessment, current : Assessment) => latest.dueDate.localeCompare(current.dueDate) ? latest : current ).dueDate)
 
   const timeDifference = latestItem.getTime() - (new Date()).getTime()
 
@@ -63,7 +63,7 @@ type SelectedCourse = {
   colour : string
 }
 
-export default function Dashboard() {
+export default function DashboardPage() {
   const session = useAppSelector(( state ) => state.session.session)
   const assessments = useAppSelector(( state) => state.assessments.assessments);
   const courses = useAppSelector(( state) => state.courses.courses);
@@ -79,16 +79,16 @@ export default function Dashboard() {
   const currentDate = new Date().toISOString();
 
   var currentCourses : any = courses.filter((course) => {
-    return assessments.some((assessment) => assessment.course_id == course.id)
+    return assessments.some((assessment) => assessment.courseId == course.id)
   })
   var filteredCourses : any = selectedCourses.filter((selCourse) => selCourse.visible)
   var filteredAssesments : any = assessments.filter((assessment) => {
-    return filteredCourses.some((course : any) => course.id == assessment.course_id)
+    return filteredCourses.some((course : any) => course.id == assessment.courseId)
   })
   var countdownDays = getLatestDay(filteredAssesments)
   var assessmentProgress = getAssessmentProgress(filteredAssesments)
-  var jarJarHappy = filteredAssesments.filter((ass : any) => (
-    (ass.complete_date ?? "ZZZZZ").localeCompare(ass.due_date ?? "") && !(ass.complete_date == null && (ass.due_date.localeCompare(currentDate)))
+  var jarJarHappy = filteredAssesments.filter((ass : Assessment) => (
+    (ass.completeDate ?? "ZZZZZ").localeCompare(ass.dueDate ?? "") && !(ass.completeDate == null && (ass.dueDate.localeCompare(currentDate)))
   )).length <= (filteredAssesments.length / 2)  
 
 
@@ -106,7 +106,7 @@ export default function Dashboard() {
     countdownDays = getLatestDay(filteredAssesments)
     assessmentProgress = getAssessmentProgress(filteredAssesments)
     currentCourses = courses.filter((course) => {
-      return assessments?.some((assessment) => assessment.course_id == course.id)
+      return assessments?.some((assessment) => assessment.courseId == course.id)
     })
 
     var tempSelectedCourses : SelectedCourse[] = [];
@@ -123,25 +123,31 @@ export default function Dashboard() {
     
     filteredCourses = selectedCourses.filter((selCourse) => selCourse.visible)
     filteredAssesments = assessments.filter((assessment) => {
-      return filteredCourses.some((course : any) => course.courseId == assessment.course_id)
+      return filteredCourses.some((course : any) => course.courseId == assessment.courseId)
     })
   }, [assessments])
 
   filteredCourses = selectedCourses.filter((selCourse) => selCourse.visible)
   filteredAssesments = assessments.filter((assessment) => {
-    return filteredCourses.some((course : any) => course.courseId == assessment.course_id)
+    return filteredCourses.some((course : any) => course.courseId == assessment.courseId)
   })
 
   countdownDays = getLatestDay(filteredAssesments)
   assessmentProgress = getAssessmentProgress(filteredAssesments)
-  jarJarHappy = filteredAssesments.filter((ass : any) => (
-      (ass.complete_date ?? "ZZZZZ").localeCompare(ass.due_date ?? "") && !(ass.complete_date == null && (ass.due_date.localeCompare(currentDate)))
+  jarJarHappy = filteredAssesments.filter((ass : Assessment) => (
+      (ass.completeDate ?? "ZZZZZ").localeCompare(ass.dueDate ?? "") && !(ass.completeDate == null && (ass.dueDate.localeCompare(currentDate)))
     )).length <= (filteredAssesments.length / 2) 
 
 
   return (
     <main className="dashboard-page">
-      <Title>Dashboard</Title>
+      <Breadcrumb
+          items={[
+            {
+              title: 'Dashboard',
+            }
+          ]}
+        />
 
       <div className="main-content" style={{backgroundColor: token.colorBgContainer, borderColor : token.colorBorder}}>
         <div className="small" style={{marginBottom: "0px"}}>
@@ -166,7 +172,7 @@ export default function Dashboard() {
           style={{backgroundColor : token.colorBgBase, overflow: "auto", height:"30vh"}}
           header={<div><Typography.Link href="/timetable" rel="noopener noreferrer">Upcoming Assessments</Typography.Link></div>}
           bordered
-          dataSource={filteredAssesments.filter((item : any)=> item.due_date.localeCompare(currentDate))}
+          dataSource={filteredAssesments.filter((item : Assessment)=> item.dueDate.localeCompare(currentDate))}
           renderItem={(item : any) => {
               const course = getItemCourse(item, courses)
               return (
@@ -183,7 +189,7 @@ export default function Dashboard() {
                       </Typography.Text> 
                     </Col>
                     <Col span={8}>
-                      <Typography.Text>{getFormatFromISO(item.due_date)}</Typography.Text>
+                      <Typography.Text>{getFormatFromISO(item.dueDate)}</Typography.Text>
                     </Col>
                     <Col span={8}>
                     <Checkbox defaultChecked={(item.complete)} />
@@ -202,7 +208,7 @@ export default function Dashboard() {
               style={{ height: "20vh", backgroundColor : token.colorBgBase, overflow: "auto"}}
               header={<div>Recent Marks</div>}
               bordered
-              dataSource={filteredAssesments.filter((item : any)=> item.due_date.localeCompare(currentDate) && item.complete).slice().reverse()}
+              dataSource={filteredAssesments.filter((item : Assessment)=> item.dueDate.localeCompare(currentDate) && item.complete).slice().reverse()}
               renderItem={(item : any) => {
                   const course = getItemCourse(item, courses)
                   return (
@@ -225,7 +231,7 @@ export default function Dashboard() {
               dataSource={courses}
               renderItem={(course) => {
                   return (
-                    <List.Item style={{backgroundColor : course.colour_code}}>
+                    <List.Item style={{backgroundColor : course.colour}}>
                       {course.name}
                     </List.Item>
                   )

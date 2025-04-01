@@ -1,7 +1,15 @@
 import { useState, useEffect, useMemo } from 'react';
-import { Flex, Select, Typography, Button } from 'antd';
+
+import { 
+  Flex, 
+  Select, 
+  Breadcrumb, 
+  Button 
+} from 'antd';
 import type { SelectProps } from 'antd';
 import { DownloadOutlined } from '@ant-design/icons';
+
+import { addHours } from 'date-fns';
 
 import { useAppSelector, useAppDispatch } from '../../API/hooks';
 import { fetchAssessments } from '../../API/assessmentsSlice';
@@ -11,31 +19,36 @@ import { WeeklyCalendar } from '../../components/WeeklyCalendar/WeeklyCalendar';
 import { GenericEvent } from '../../common/Types';
 
 // import { downloadICS } from './export-funcs';
-const { Text } = Typography;
 
-export default function Timetable() {
+export default function TimetablePage() {
+  const session = useAppSelector((state) => state.session.session);
   const courses = useAppSelector((state) => state.courses);
   const assessments = useAppSelector((state) => state.assessments);
-  const session = useAppSelector((state) => state.session.session);
   const dispatch = useAppDispatch();
   const [ courseFilter, setCourseFilter ] = useState<number[]>([]);
 
   useEffect(() => {
     if (session) {
-      dispatch(fetchAssessments((session as any)?.user.id));
-      dispatch(fetchCourses((session as any)?.user.id));
+      dispatch(fetchAssessments(session.user.id));
+      dispatch(fetchCourses(session.user.id));
     }
   }, []);
 
   const events: GenericEvent[] = useMemo(() => (
-    assessments.status === 'succeeded' ?  
-      assessments.assessments.map((assessment) => ({
-        eventId: assessment.id,
-        startTime: new Date(2025, 2, 12, 12, 0, 0), 
-        endTime: new Date(2025, 2, 12, 14, 30, 0), 
-        title: assessment.title, 
-        backgroundColor: 'red' // TODO: Get colour from course table
-      }))
+    assessments.status === 'succeeded' && courses.status === 'succeeded' ?  
+      assessments.assessments
+        .filter((assessment) => courseFilter.includes(assessment.courseId))
+        .map((assessment) => {
+          let dueDate = new Date(assessment.dueDate);
+          return {
+            eventId: assessment.id.toString(),
+            startTime: dueDate, 
+            endTime: addHours(dueDate, 1),
+            title: assessment.name, 
+            backgroundColor: courses.courses.find((course) => course.id === assessment.courseId)?.colour
+          };
+        }
+      )
     : []
   ), [assessments, courseFilter]);
 
@@ -55,23 +68,33 @@ export default function Timetable() {
   }, [courses.courses]);
     
   return (
-    <Flex vertical gap='large'>
+    <Flex 
+      style={{
+        padding: 24
+      }}
+      vertical 
+      gap='large'
+    >
+      <Breadcrumb
+        items={[
+          {
+            title: 'Timetable',
+          }
+        ]}
+      />
       <Flex vertical gap='small'>
-        <Text strong>
-          Courses
-        </Text>
-          <Flex gap="large">
-            <Select
-              mode="multiple"
-              allowClear
-              style={{ width: '100%' }}
-              placeholder='Select courses'
-              value={courseFilter}
-              onChange={(values) => {setCourseFilter(values)}}
-              options={options}
-            />
+        <Flex gap="large">
+          <Select
+            mode="multiple"
+            allowClear
+            style={{ width: '100%' }}
+            placeholder='Select courses'
+            value={courseFilter}
+            onChange={(values) => {setCourseFilter(values)}}
+            options={options}
+          />
 
-            <Button 
+          <Button 
             type="primary" 
             icon={<DownloadOutlined />} 
             size={"large"}
@@ -84,10 +107,8 @@ export default function Timetable() {
         events={events}
         onEventClick={(event) => console.log(event)}
         onSelectDate={(date) => console.log(date)}
-        weekends={false}
+        weekends={true}
       />
-      
     </Flex>
-    
   );
 }

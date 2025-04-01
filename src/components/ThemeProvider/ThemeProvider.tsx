@@ -1,7 +1,17 @@
-import React, { useState } from 'react';
-import { ConfigProvider, FloatButton } from 'antd';
-import { SunOutlined, MoonOutlined } from '@ant-design/icons';
+import { 
+  createContext, 
+  useContext, 
+  useState 
+} from 'react';
+
+import { ConfigProvider } from 'antd';
+
 import * as Constants from '../../common/Constants'
+
+const ThemeContext = createContext({
+  isDark: false,
+  toggleTheme: () => {}
+});
 
 interface ThemeProviderProps {
   children: React.ReactNode
@@ -10,17 +20,21 @@ interface ThemeProviderProps {
 export default function ThemeProvider({ 
     children 
   }: ThemeProviderProps) {
-  const [isDark, setIsDark] = useState<boolean>(true);
+  const [isDark, setIsDark] = useState<boolean>(false);
+
+  const toggleTheme = () => {
+    setIsDark(!isDark);
+  }
+
   return (
-    <ConfigProvider theme={isDark ? Constants.darkTheme : Constants.lightTheme}>
-      {children}
-      <FloatButton 
-        icon={isDark ? <SunOutlined/> : <MoonOutlined/>}
-        type="primary"
-        onClick={() => {
-          setIsDark(() => !isDark)
-        }}
-      />
-    </ConfigProvider>
+    <ThemeContext.Provider value={{ isDark, toggleTheme }}>
+      <ConfigProvider theme={isDark ? Constants.darkTheme : Constants.lightTheme}>
+        {children}
+      </ConfigProvider>
+    </ThemeContext.Provider>
   );
+}
+
+export const useTheme = () => {
+  return useContext(ThemeContext);
 }

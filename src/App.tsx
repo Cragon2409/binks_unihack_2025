@@ -7,11 +7,12 @@ import { supabase } from './API/supabase';
 import AppLayout from './components/Layout/AppLayout';
 import LoginLayout from './components/Layout/LoginLayout';
 import ThemeProvider from './components/ThemeProvider/ThemeProvider';
-import Dashboard from './pages/Dashboard/Dashboard';
-import Courses from './pages/Courses/Courses';
-import Timetable from './pages/Timetable/Timetable';
-import Login from './pages/Login/Login';
-import PasswordReset from './pages/PasswordReset/PasswordReset';
+import DashboardPage from './pages/DashboardPage/DashboardPage';
+import CoursesPage from './pages/CoursesPage/CoursesPage';
+import CoursePage from './pages/CoursePage/CoursePage';
+import TimetablePage from './pages/TimetablePage/TimetablePage';
+import LoginPage from './pages/LoginPage/LoginPage';
+import PasswordResetPage from './pages/PasswordResetPage/PasswordResetPage';
 
 
 import { useAppDispatch, useAppSelector } from './API/hooks';
@@ -43,7 +44,7 @@ function App() {
 
   useEffect(() => {
     if (session != null) {
-      dispatch(fetchCourses((session as any)?.user.id));
+      dispatch(fetchCourses(session?.user.id));
 
       // setLoading(false);
     }
@@ -55,17 +56,20 @@ function App() {
         {
           session ? 
           (
-            <Route path="/" element={<AppLayout />}>
-              <Route index element={<Dashboard />} />
-              <Route path="courses" element={<Courses />} />
-              <Route path="timetable" element={<Timetable />} />
+            <Route path='/' element={<AppLayout />}>
+              <Route index element={<DashboardPage />} />
+              <Route path='courses'>
+                <Route index element={<CoursesPage />} />
+                <Route path=':courseId' element={<CoursePage />} />
+              </Route>
+              <Route path='timetable' element={<TimetablePage />} />
             </Route>
           )
           :
           (
-            <Route path="/*" element={<LoginLayout />}>
-              <Route path="auth" element={<PasswordReset supabase={supabase} />} />
-              <Route path="*" element={<Login supabase={supabase} />} />
+            <Route path='/*' element={<LoginLayout />}>
+              <Route path='auth' element={<PasswordResetPage supabase={supabase} />} />
+              <Route path='*' element={<LoginPage supabase={supabase} />} />
             </Route>
           )
         }

@@ -16,7 +16,7 @@ import { LoginProps } from '../../common/Types';
 
 const { Title, Link } = Typography;
 
-export default function Login({ supabase }: LoginProps) {
+export default function LoginPage({ supabase }: LoginProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [signInLoading, setSignInLoading] = useState(false);
