@@ -5,13 +5,37 @@ import {
   theme
 } from 'antd';
 
+import { useAppSelector } from '../../../API/hooks';
+import { Assessment } from '../../../common/Types';
+
 export const JarJarMeter: React.FC = () => {
   const { token } = theme.useToken();
-
-  const jarJarHappy = false;
+  const assessments = useAppSelector((state) => state.assessments);
+  
+  const currentDate = new Date().toISOString();
+  const jarJarHappy = assessments.assessments.filter((ass : Assessment) => (
+    (ass.completeDate ?? "ZZZZZ").localeCompare(ass.dueDate ?? "") 
+      && !(ass.completeDate == null && (ass.dueDate.localeCompare(currentDate)))
+  )).length <= (assessments.assessments.length / 2)  
 
   return (
-    <Card title="Jar Jar Meter" style={{ width: 300, height:"100%", backgroundColor : token.colorBgBase}}> 
+    <Card 
+      style={{ 
+        width: '100%', 
+        height:"100%",
+        boxShadow: token.boxShadow
+      }}  
+      styles={{
+        header: {
+          borderBottom: 'none'
+        },
+        body: {
+          paddingTop: 0
+        }
+      }}
+      variant='borderless'
+      title="Jar Jar Meter"
+    > 
       {(jarJarHappy) ? (
         <>
           Jar Jar Approves of your current academic performance!

@@ -23,22 +23,35 @@ export const Progress: React.FC = () => {
   return (
     <Card 
       style={{ 
-        height: '100%', 
+        width: '100%',
+        height: '100%',
         justifyContent: 'center', 
-        backgroundColor : token.colorBgBase 
+        boxShadow: token.boxShadow
       }}
+      styles={{
+        header: {
+          borderBottom: 'none'
+        },
+        body: {
+          paddingTop: 0,
+        }
+      }}
+      variant='borderless'
       title='Progress'  
       loading={assessments.status != 'succeeded'}
     >
-      <Flex justify='center' vertical={true} align='center'>
-        <AntProgress type='circle' percent={assessmentProgress} />
-        <Text>
-          {
-            (assessmentProgress == 100) 
-              ? 'All Assignments Done!'
-              : `${numberOfRemainingAssessments} Assessment ${numberOfRemainingAssessments != 1 ? 's' : ""} Remaining` 
-          }
-        </Text>
+      <Flex justify='center' align='center'>
+        <Flex vertical>
+          <AntProgress 
+            type='circle' percent={assessmentProgress} />
+          <Text>
+            {
+              (assessmentProgress == 100) 
+                ? 'All Assignments Done!'
+                : `${numberOfRemainingAssessments} Assessment ${numberOfRemainingAssessments != 1 ? 's' : ""} Remaining` 
+            }
+          </Text>
+        </Flex>
       </Flex>
     </Card>
   )

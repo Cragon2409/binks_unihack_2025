@@ -1,7 +1,9 @@
 import React, { useEffect } from 'react'
 
 import {
-  Flex
+  Flex,
+  Row,
+  Col
 } from 'antd';
 
 import { UpcomingAssessments } from './UpcomingAssessments';
@@ -25,13 +27,29 @@ export const Dashboard: React.FC = () => {
   }, [session]);
 
   return (
-    <Flex>
-      <UpcomingAssessments />
-      <RecentMarks />
-      <Courses />
-      <JarJarMeter /> 
-      <Countdown />
-      <Progress />
+    <Flex vertical gap='large'>
+      <Row gutter={[24, 24]}>
+        <Col xs={24} sm={24} md={24} lg={12}>
+          <UpcomingAssessments />
+        </Col>
+        <Col xs={24} sm={24} md={24} lg={12}>
+          <RecentMarks />
+        </Col>
+      </Row>
+      <Row gutter={[24, 24]}>
+        <Col xs={24} sm={24} md={12} lg={6}>
+          <Courses />
+        </Col>
+        <Col xs={24} sm={24} md={12} lg={6}>
+          <Progress />
+        </Col>
+        <Col xs={24} sm={24} md={12} lg={6}>
+          <Countdown />
+        </Col>
+        <Col xs={24} sm={24} md={12} lg={6}>
+          <JarJarMeter /> 
+        </Col>
+      </Row>
     </Flex>
   )
 }

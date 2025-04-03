@@ -2,7 +2,6 @@ import React from 'react'
 
 import {
   Card, 
-  Flex,
   Typography,
   theme
 } from 'antd';
@@ -37,25 +36,26 @@ export const Countdown: React.FC = () => {
   return (
     <Card 
       style={{ 
-        height: "100%", 
-        backgroundColor : token.colorBgBase 
+        width: '100%',
+        height: '100%',
+        boxShadow: token.boxShadow
       }}
+      styles={{
+        header: {
+          borderBottom: 'none'
+        },
+        body: {
+          paddingTop: 0
+        }
+      }}
+      variant='borderless'
       title="Countdown" 
       loading={assessments.status != 'succeeded'}
     >
       {
         countdownDays == 0 
           ? <Text>No upcoming assessments</Text>
-          : (
-            <Flex align="center" vertical>
-              <Text>
-                {countdownDays}
-              </Text>
-              <Text>
-                  days until next assessment is due
-              </Text>
-            </Flex>
-          )
+          : <Text>{`${countdownDays} days until next assessment is due`}</Text>
       }
     </Card>
   )

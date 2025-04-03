@@ -40,37 +40,52 @@ export const UpcomingAssessments: React.FC = () => {
   }
 
   return (
-    <Card>
+    <Card 
+      style={{ 
+        width: '100%',
+        height: '100%',
+        justifyContent: 'center', 
+        boxShadow: token.boxShadow
+      }}
+      styles={{
+        header: {
+          borderBottom: 'none'
+        },
+        body: {
+          paddingTop: 0,
+        }
+      }}
+      variant='borderless'
+      title={<Link to='/assessments'>Recent Marks</Link>}
+      loading={assessments.status != 'succeeded' && courses.status != 'succeeded'}
+    >
       <List
-        style={{
-          backgroundColor: token.colorBgBase, 
-          overflow: "auto", 
-          height:"30vh"
-        }}
-        loading={assessments.status != 'succeeded' && courses.status != 'succeeded'}
+        bordered={false}
         header={<Link to="/timetable">Upcoming Assessments</Link>}
-        bordered
         dataSource={assessments.assessments.filter((item : Assessment) => item.dueDate.localeCompare(currentDate))}
         renderItem={(item : any) => {
             const course = courses.courses.find((course) => course.id == item.courseId);
             return (
               <List.Item>
                 <Row style={{width: "100%"}} gutter={[16, 16]}>
-                  <Col span={8}>
-                    <Text 
+                  <Col span={1}>
+                    <div
                       style={{
-                        width: 300,
-                        backgroundColor : course?.colour
+                        width: 20,
+                        height: 20,
+                        backgroundColor: course?.colour,
+                        borderRadius: 5
                       }}
-                    >
-                      {item.name}
-                    </Text> 
+                    />
                   </Col>
-                  <Col span={8}>
+                  <Col span={7}>
+                    <Text>{item.name}</Text> 
+                  </Col>
+                  <Col span={7}>
                     <Text>{getFormatFromISO(item.dueDate)}</Text>
                   </Col>
-                  <Col span={8}>
-                  <Checkbox defaultChecked={(item.complete)} />
+                  <Col span={7}>
+                    <Checkbox defaultChecked={(item.complete)} />
                   </Col>
                 </Row>
               </List.Item>
