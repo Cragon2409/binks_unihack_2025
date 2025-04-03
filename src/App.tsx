@@ -19,8 +19,6 @@ import { useAppDispatch, useAppSelector } from './API/hooks';
 import { fetchCourses } from './API/coursesSlice';
 import { setSession } from './API/sessionSlice';
 
-import './App.css';
-
 function App() {
   const session = useAppSelector(( state ) => state.session.session)
 
