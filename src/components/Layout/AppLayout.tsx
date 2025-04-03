@@ -31,8 +31,6 @@ export default function AppLayout() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  console.log(isMobileVerticalNavOpen);
-
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <HeaderContent 
