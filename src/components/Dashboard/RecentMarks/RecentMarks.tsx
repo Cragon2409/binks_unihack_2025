@@ -39,7 +39,7 @@ export const RecentMarks: React.FC = () => {
         }
       }}
       variant='borderless'
-      title={<Link to='/assessments'>Recent Marks</Link>}
+      title='Recent Marks'
       loading={assessments.status != 'succeeded' || assessments.status != 'succeeded'}
     >
       <List
@@ -47,7 +47,6 @@ export const RecentMarks: React.FC = () => {
           width: '100%',
           height: '100%'
         }}
-        header={<Text>Recent Marks</Text>}
         dataSource={assessments.assessments.filter((item : Assessment) => item.dueDate.localeCompare(currentDate) && item.complete).slice().reverse()}
         renderItem={(item : any) => {
           const course = courses.courses.find((course) => course.id == item.courseId);
