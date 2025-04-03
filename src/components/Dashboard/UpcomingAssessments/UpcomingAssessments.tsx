@@ -1,5 +1,4 @@
 import React from 'react'
-import { Link } from 'react-router-dom';
 
 import {
   Card,
@@ -56,12 +55,11 @@ export const UpcomingAssessments: React.FC = () => {
         }
       }}
       variant='borderless'
-      title={<Link to='/assessments'>Upcoming Assessments</Link>}
+      title='Upcoming Assessments'
       loading={assessments.status != 'succeeded' && courses.status != 'succeeded'}
     >
       <List
         bordered={false}
-        header={<Link to="/timetable">Upcoming Assessments</Link>}
         dataSource={assessments.assessments.filter((item : Assessment) => item.dueDate.localeCompare(currentDate))}
         renderItem={(item : any) => {
             const course = courses.courses.find((course) => course.id == item.courseId);
