@@ -56,7 +56,7 @@ export const UpcomingAssessments: React.FC = () => {
         }
       }}
       variant='borderless'
-      title={<Link to='/assessments'>Recent Marks</Link>}
+      title={<Link to='/assessments'>Upcoming Assessments</Link>}
       loading={assessments.status != 'succeeded' && courses.status != 'succeeded'}
     >
       <List
